@@ -19,11 +19,7 @@
     </mat-form-field>
     <mat-form-field>
       <mat-label>Stadt</mat-label>
-      <mat-select formControlName="state">
-        <mat-option *ngFor="let city of cities" [value]="city">
-          {{city}}
-        </mat-option>
-      </mat-select>
+      <input matInput placeholder="Stadt" formControlName="city">
     </mat-form-field>
     <button mat-button>
       <mat-icon>send</mat-icon>
