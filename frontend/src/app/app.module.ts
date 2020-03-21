@@ -32,6 +32,7 @@ import {ApiModule, BASE_PATH} from './clients/melderegister';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatMomentDateModule, MomentDateAdapter} from '@angular/material-moment-adapter';
 import { TimepickerComponent } from './timepicker/timepicker.component';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 @NgModule({
   declarations: [
@@ -63,6 +64,8 @@ import { TimepickerComponent } from './timepicker/timepicker.component';
     MatMenuModule,
     LayoutModule,
     MatOptionModule,
+    MatSelectModule,
+    NgxChartsModule
     MatDatepickerModule,
     MatNativeDateModule,
     MatRadioModule,
