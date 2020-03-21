@@ -25,7 +25,7 @@ export class NavComponent implements OnInit {
   authenticated$: Observable<boolean> = this.authenticationService.authenticated$;
 
   loginForm = new FormGroup({
-    username: new FormControl('', [Validators.required]),
+    email: new FormControl('', [Validators.required]),
     password: new FormControl('', Validators.required),
     stayLoggedIn: new FormControl(false),
   });
@@ -43,14 +43,14 @@ export class NavComponent implements OnInit {
   login() {
     this.loadingLogin = true;
     this.isLoginErrorVisible = false;
-    const username = this.loginForm.get('username').value;
+    const email = this.loginForm.get('email').value;
     const password = this.loginForm.get('password').value;
     const stayLoggedIn = this.loginForm.get('stayLoggedIn').value;
     console.log('Login!');
     this.authenticationService.login({
-      username,
+      email,
       password,
-      stayLoggedIn
+      rememberMe: stayLoggedIn
     }).subscribe(() => {
       console.log('Navigation to dashboard');
       this.router.navigate(['/dashboard']);

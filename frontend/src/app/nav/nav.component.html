@@ -16,6 +16,10 @@
         <mat-icon mat-list-icon>folder</mat-icon>
         <div mat-line>Erfassung</div>
       </a>
+      <a mat-list-item class="nav-list-item" routerLink="/test-list">
+        <mat-icon mat-list-icon>folder</mat-icon>
+        <div mat-line>Testliste</div>
+      </a>
       <a mat-list-item class="nav-list-item" routerLink="/test">
         <mat-icon mat-list-icon>folder</mat-icon>
         <div mat-line>Test</div>
@@ -60,7 +64,7 @@
           <form [formGroup]="loginForm" (ngSubmit)="login()">
             <div class="login-form" *ngIf="!loadingLogin">
               <mat-form-field>
-                <input matInput type="text" placeholder="Benutzername" formControlName="username">
+                <input matInput type="text" placeholder="Benutzername" formControlName="email">
               </mat-form-field>
 
 
