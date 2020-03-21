@@ -1,0 +1,83 @@
+<mat-sidenav-container class="sidenav-container" *ngIf="authenticated$ | async; else unauthenticated" autosize>
+
+  <mat-sidenav #drawer class="sidenav" fixedInViewport
+               [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+               [mode]="(isHandset$ | async) ? 'over' : 'side'"
+               [opened]="(isHandset$ | async) === false">
+    <mat-toolbar>
+        <h3>Navigation</h3>
+    </mat-toolbar>
+    <mat-list>
+      <a mat-list-item class="nav-list-item" routerLink="/dashboard">
+        <mat-icon mat-list-icon>folder</mat-icon>
+        <div mat-line>Dashboard</div>
+      </a>
+      <a mat-list-item class="nav-list-item" routerLink="/test">
+        <mat-icon mat-list-icon>folder</mat-icon>
+        <div mat-line>Test</div>
+      </a>
+    </mat-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <mat-toolbar color="primary" class="mat-elevation-z5 toolbar">
+      <button
+        type="button"
+        aria-label="Toggle sidenav"
+        mat-icon-button
+        (click)="drawer.toggle()"
+        *ngIf="isHandset$ | async">
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
+      <span>Zentrales Melderegister</span>
+
+      <button mat-button (click)="logout()">LOGOUT</button>
+    </mat-toolbar>
+    <main>
+      <router-outlet></router-outlet>
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+
+<ng-template #unauthenticated>
+  <mat-toolbar color="primary" style="z-index: 99;" class="mat-elevation-z5">
+    Zentrales Melderegister
+  </mat-toolbar>
+  <main>
+    <div style="overflow: auto; display: flex; align-items: center; justify-content: center; flex: 1 1 auto">
+
+      <!--Login-Form-->
+      <mat-card style="width: 400px; margin-top: 30px;margin-bottom:30px;max-width: 80%">
+        <mat-card-header>
+          <mat-card-title><h1 class="mat-headline" style="color: dimgray">Login</h1></mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+
+          <form [formGroup]="loginForm" (ngSubmit)="login()">
+            <div class="login-form" *ngIf="!loadingLogin">
+              <mat-form-field>
+                <input matInput type="text" placeholder="Benutzername" formControlName="username">
+              </mat-form-field>
+
+
+              <mat-form-field>
+                <input matInput type="password" placeholder="Password" formControlName="password">
+              </mat-form-field>
+
+              <div style="padding-bottom: 10px; display: flex">
+                <mat-checkbox formControlName="stayLoggedIn">Stay logged in</mat-checkbox>
+              </div>
+
+              <button mat-raised-button color="primary">Login</button>
+            </div>
+            <div style="display: flex;justify-content: center;" *ngIf="loadingLogin">
+              <mat-spinner [mode]="'indeterminate'"></mat-spinner>
+            </div>
+            <div *ngIf="isLoginErrorVisible">{{errorLogin}}</div>
+          </form>
+        </mat-card-content>
+      </mat-card>
+
+    </div>
+  </main>
+</ng-template>

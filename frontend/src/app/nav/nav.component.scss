@@ -1,0 +1,25 @@
+.sidenav-container {
+  height: 100%;
+}
+
+.nav-list-item {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.nav-list-item:hover {
+  background: rgba(0, 0, 0, 0.125);
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.toolbar {
+  display: flex;
+
+  span {
+    flex: 1 1 auto;
+  }
+}
