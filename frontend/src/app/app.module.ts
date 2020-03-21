@@ -25,6 +25,7 @@ import {TestComponent} from './test/test.component';
 import { ErfassungComponent } from './erfassung/erfassung.component';
 import {MatOptionModule} from "@angular/material/core";
 import {MatSelectModule} from "@angular/material/select";
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 @NgModule({
   declarations: [
@@ -54,7 +55,8 @@ import {MatSelectModule} from "@angular/material/select";
     MatMenuModule,
     LayoutModule,
     MatOptionModule,
-    MatSelectModule
+    MatSelectModule,
+    NgxChartsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
