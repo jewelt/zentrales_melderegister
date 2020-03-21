@@ -18,6 +18,7 @@ import { CustomHttpUrlEncodingCodec }                        from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 import { TestDTO } from '../model/testDTO';
+import { TestPatientTestResultDTO } from '../model/testPatientTestResultDTO';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
@@ -206,6 +207,47 @@ export class TestControllerService {
         ];
 
         return this.httpClient.request<Array<TestDTO>>('get',`${this.basePath}/v1/test`,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * getAllTestsWithPatients
+     * 
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getAllTestsWithPatientsUsingGET(observe?: 'body', reportProgress?: boolean): Observable<Array<TestPatientTestResultDTO>>;
+    public getAllTestsWithPatientsUsingGET(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<TestPatientTestResultDTO>>>;
+    public getAllTestsWithPatientsUsingGET(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<TestPatientTestResultDTO>>>;
+    public getAllTestsWithPatientsUsingGET(observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
+        let headers = this.defaultHeaders;
+
+        // authentication (JWT) required
+        if (this.configuration.apiKeys["X-Melderegister-Authorization"]) {
+            headers = headers.set('X-Melderegister-Authorization', this.configuration.apiKeys["X-Melderegister-Authorization"]);
+        }
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            '*/*'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+        ];
+
+        return this.httpClient.request<Array<TestPatientTestResultDTO>>('get',`${this.basePath}/v1/test/with-patients`,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,

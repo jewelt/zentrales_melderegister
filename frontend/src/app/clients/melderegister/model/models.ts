@@ -7,5 +7,6 @@ export * from './loginRequest';
 export * from './patientDTO';
 export * from './stateDTO';
 export * from './testDTO';
+export * from './testPatientTestResultDTO';
 export * from './testResultDTO';
 export * from './userAccountDTO';

@@ -22,12 +22,13 @@ import {MatGridListModule} from '@angular/material/grid-list';
 import {MatMenuModule} from '@angular/material/menu';
 import {LayoutModule} from '@angular/cdk/layout';
 import {TestComponent} from './test/test.component';
-import { ErfassungComponent } from './erfassung/erfassung.component';
+import {ErfassungComponent} from './erfassung/erfassung.component';
 import {MatOptionModule} from '@angular/material/core';
 import {MatSelectModule} from '@angular/material/select';
-import { TestListComponent } from './test-list/test-list.component';
+import {TestListComponent} from './test-list/test-list.component';
 import {SimplemattableModule} from 'simplemattable';
 import {ApiModule, BASE_PATH} from './clients/melderegister';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -60,6 +61,7 @@ import {ApiModule, BASE_PATH} from './clients/melderegister';
     MatOptionModule,
     MatSelectModule,
     SimplemattableModule,
+    MatSnackBarModule,
     ApiModule
   ],
   providers: [

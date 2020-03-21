@@ -2,7 +2,13 @@ import {Injectable} from '@angular/core';
 import {map} from 'rxjs/operators';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
-import {CityControllerService, LoginRequest, UserJwtApiControllerService} from '../clients/melderegister';
+import {
+  CityControllerService,
+  LoginRequest,
+  TestControllerService,
+  TestResultControllerService,
+  UserJwtApiControllerService
+} from '../clients/melderegister';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +17,9 @@ export class AuthService {
 
   constructor(private http: HttpClient,
               private userJwtApiControllerService: UserJwtApiControllerService,
-              private cityControllerService: CityControllerService) {
+              private cityControllerService: CityControllerService,
+              private testControllerService: TestControllerService,
+              private testResultControllerService: TestResultControllerService) {
     this.setApiKeys({});
   }
 
@@ -22,13 +30,15 @@ export class AuthService {
     return this.userJwtApiControllerService.authorizeUsingPOST(loginRequest).pipe(map(response => {
       this.authenticated$.next(true);
       this.setApiKeys({
-        'X-Melderegister-Authorization': 'Bearer ' + response.idToken
+        'X-Melderegister-Authorization': 'Bearer ' + (response as any).id_token
       });
     }));
   }
 
   private setApiKeys(keys: any) {
     this.cityControllerService.configuration.apiKeys = keys;
+    this.testControllerService.configuration.apiKeys = keys;
+    this.testResultControllerService.configuration.apiKeys = keys;
   }
 
 }

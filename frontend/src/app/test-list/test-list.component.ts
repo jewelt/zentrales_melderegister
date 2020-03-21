@@ -1,5 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {TableColumn} from 'simplemattable';
+import {TestControllerService, TestResultControllerService} from '../clients/melderegister';
+import {TestPatientTestResultDTO} from '../clients/melderegister/model/testPatientTestResultDTO';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-liste',
@@ -8,36 +11,44 @@ import {TableColumn} from 'simplemattable';
 })
 export class TestListComponent implements OnInit {
 
-  columns: TableColumn<Test, any>[] = [];
-  data: Test[] = [{
-    id: 1,
-    birthday: '2020-03-16',
-    docName: 'Herr Mustermann',
-    testDate: '2020-03-16',
-    testResult: false
-  }];
+  columns: TableColumn<TestPatientTestResultDTO, any>[] = [];
+  data: TestPatientTestResultDTO[] = [];
 
-  constructor() {
+  constructor(private testControllerService: TestControllerService,
+              private testResultControllerService: TestResultControllerService,
+              private matSnackBar: MatSnackBar) {
   }
 
   ngOnInit() {
     this.columns = [
-      new TableColumn<Test, 'birthday'>('Geburtsdatum', 'birthday'),
-      new TableColumn<Test, 'docName'>('Arzt Name', 'docName'),
-      new TableColumn<Test, 'testDate'>('Testdatum', 'testDate'),
-      new TableColumn<Test, 'testResult'>('Testergbnis', 'testResult'),
+      new TableColumn<TestPatientTestResultDTO, 'patientDTO'>('Geburtsdatum', 'patientDTO')
+        .withTransform(patientDTO => patientDTO.birthday.toString()),
+      new TableColumn<TestPatientTestResultDTO, 'testDate'>('Testdatum', 'testDate'),
+      new TableColumn<TestPatientTestResultDTO, 'resultDate'>('Ergebnisdatum', 'resultDate'),
+      new TableColumn<TestPatientTestResultDTO, 'testResultDTO'>('Testergebnis', 'testResultDTO')
+        .withTransform(testResult => testResult.description),
     ];
+    this.testControllerService.getAllTestsWithPatientsUsingGET().subscribe(tests => {
+      this.data = tests;
+    });
   }
 
-  delete(testToDelete: Test) {
-    this.data = this.data.filter(test => test.id !== testToDelete.id);
+  delete(testToDelete: TestPatientTestResultDTO) {
+    this.testResultControllerService.deleteTestResultUsingDELETE(1).subscribe(() => {
+      this.testControllerService.deleteTestUsingDELETE(1).subscribe(() => {
+        this.data = this.data.filter(test => test.id !== testToDelete.id);
+        this.matSnackBar.open('Test gelöscht.', 'OK', {
+          duration: 3000
+        });
+      }, error => {
+        this.matSnackBar.open('Test konnte nicht gelöscht werden.', 'OK', {
+          duration: 3000
+        });
+      });
+    }, error => {
+      this.matSnackBar.open('Test konnte nicht gelöscht werden.', 'OK', {
+        duration: 3000
+      });
+    });
   }
-}
-
-interface Test {
-  id: number;
-  birthday: string;
-  docName: string;
-  testDate: string;
-  testResult: boolean;
 }
