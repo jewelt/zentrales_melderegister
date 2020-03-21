@@ -21,7 +21,7 @@ public class StateServiceImpl implements StateService{
 
         log.debug("Insert State "+ stateDTO.toString());
         return this.dslContext.insertInto(Tables.STATE)
-                .set(Tables.STATE.ID, stateDTO.getId())
+
                 .set(Tables.STATE.NAME, stateDTO.getName())
                 .set(Tables.STATE.COORDINATES_LATITUDE, stateDTO.getCoordinatesLatitude())
                 .set(Tables.STATE.COORDINATES_LONGITUDE, stateDTO.getCoordinatesLongitude())
