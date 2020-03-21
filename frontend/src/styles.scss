@@ -2,3 +2,24 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+// Scrollbar Fun
+
+::-webkit-scrollbar {
+  width: 12px; /* for vertical scrollbars */
+  height: 12px; /* for horizontal scrollbars */
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #3f51b5;
+}
+
+body {
+  scrollbar-width: thin;
+  scrollbar-color: #3f51b5 rgba(0, 0, 0, 0.1);
+  background-color: #e8e8e8;
+}
