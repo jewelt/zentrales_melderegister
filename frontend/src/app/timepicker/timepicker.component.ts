@@ -1,6 +1,6 @@
 import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormControl} from '@angular/forms';
-import moment from 'moment';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-timepicker',

@@ -65,7 +65,7 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
     LayoutModule,
     MatOptionModule,
     MatSelectModule,
-    NgxChartsModule
+    NgxChartsModule,
     MatDatepickerModule,
     MatNativeDateModule,
     MatRadioModule,
