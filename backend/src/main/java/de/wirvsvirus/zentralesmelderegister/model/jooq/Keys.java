@@ -14,6 +14,7 @@ import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.State;
 import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.Test;
 import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.TestResult;
 import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.UserAccount;
+import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.UserAuthority;
 import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.records.CityRecord;
 import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.records.CountryRecord;
 import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.records.DoctorPatientRecord;
@@ -24,6 +25,7 @@ import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.records.StateRecor
 import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.records.TestRecord;
 import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.records.TestResultRecord;
 import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.records.UserAccountRecord;
+import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.records.UserAuthorityRecord;
 
 import javax.annotation.Generated;
 
@@ -81,12 +83,15 @@ public class Keys {
     // -------------------------------------------------------------------------
 
     public static final ForeignKey<CityRecord, CountryRecord> CITY__CITY_COUNTY_ID_FK = ForeignKeys0.CITY__CITY_COUNTY_ID_FK;
+    public static final ForeignKey<CityRecord, UserAccountRecord> CITY__CITY_USER_ACCOUNT_ID_FK = ForeignKeys0.CITY__CITY_USER_ACCOUNT_ID_FK;
     public static final ForeignKey<CountryRecord, StateRecord> COUNTRY__COUNTY_STATE_ID_FK = ForeignKeys0.COUNTRY__COUNTY_STATE_ID_FK;
     public static final ForeignKey<DoctorPatientRecord, PatientRecord> DOCTOR_PATIENT__DOCTOR_PATIENT_PATIENT_ID_FK = ForeignKeys0.DOCTOR_PATIENT__DOCTOR_PATIENT_PATIENT_ID_FK;
     public static final ForeignKey<DoctorPatientRecord, DoctorRecord> DOCTOR_PATIENT__DOCTOR_PATIENT_DOCTOR_ID_FK = ForeignKeys0.DOCTOR_PATIENT__DOCTOR_PATIENT_DOCTOR_ID_FK;
     public static final ForeignKey<PatientRecord, CityRecord> PATIENT__PATIENT_CITY_ID_FK = ForeignKeys0.PATIENT__PATIENT_CITY_ID_FK;
+    public static final ForeignKey<PatientRecord, UserAccountRecord> PATIENT__PATIENT_USER_ACCOUNT_ID_FK = ForeignKeys0.PATIENT__PATIENT_USER_ACCOUNT_ID_FK;
     public static final ForeignKey<TestRecord, TestResultRecord> TEST__TEST_TEST_RESULT_ID_FK = ForeignKeys0.TEST__TEST_TEST_RESULT_ID_FK;
     public static final ForeignKey<TestRecord, PatientRecord> TEST__TEST_PATIENT_ID_FK = ForeignKeys0.TEST__TEST_PATIENT_ID_FK;
+    public static final ForeignKey<UserAuthorityRecord, UserAccountRecord> USER_AUTHORITY__USER_AUTHORITY___FK___USER_ACCOCUNT = ForeignKeys0.USER_AUTHORITY__USER_AUTHORITY___FK___USER_ACCOCUNT;
 
     // -------------------------------------------------------------------------
     // [#1459] distribute members to avoid static initialisers > 64kb
@@ -119,11 +124,14 @@ public class Keys {
 
     private static class ForeignKeys0 {
         public static final ForeignKey<CityRecord, CountryRecord> CITY__CITY_COUNTY_ID_FK = Internal.createForeignKey(de.wirvsvirus.zentralesmelderegister.model.jooq.Keys.COUNTY_PK, City.CITY, "city__city_county_id_fk", City.CITY.COUNTRY_ID);
+        public static final ForeignKey<CityRecord, UserAccountRecord> CITY__CITY_USER_ACCOUNT_ID_FK = Internal.createForeignKey(de.wirvsvirus.zentralesmelderegister.model.jooq.Keys.USER_ACCOUNT_PK, City.CITY, "city__city_user_account_id_fk", City.CITY.USER_ACCOUNT_ID);
         public static final ForeignKey<CountryRecord, StateRecord> COUNTRY__COUNTY_STATE_ID_FK = Internal.createForeignKey(de.wirvsvirus.zentralesmelderegister.model.jooq.Keys.DISTRICT_PK, Country.COUNTRY, "country__county_state_id_fk", Country.COUNTRY.STATE_ID);
         public static final ForeignKey<DoctorPatientRecord, PatientRecord> DOCTOR_PATIENT__DOCTOR_PATIENT_PATIENT_ID_FK = Internal.createForeignKey(de.wirvsvirus.zentralesmelderegister.model.jooq.Keys.PATIENT_PK, DoctorPatient.DOCTOR_PATIENT, "doctor_patient__doctor_patient_patient_id_fk", DoctorPatient.DOCTOR_PATIENT.PATIENT_ID);
         public static final ForeignKey<DoctorPatientRecord, DoctorRecord> DOCTOR_PATIENT__DOCTOR_PATIENT_DOCTOR_ID_FK = Internal.createForeignKey(de.wirvsvirus.zentralesmelderegister.model.jooq.Keys.DOCTOR_PK, DoctorPatient.DOCTOR_PATIENT, "doctor_patient__doctor_patient_doctor_id_fk", DoctorPatient.DOCTOR_PATIENT.DOCTOR_ID);
         public static final ForeignKey<PatientRecord, CityRecord> PATIENT__PATIENT_CITY_ID_FK = Internal.createForeignKey(de.wirvsvirus.zentralesmelderegister.model.jooq.Keys.CITY_PK, Patient.PATIENT, "patient__patient_city_id_fk", Patient.PATIENT.CITY_ID);
+        public static final ForeignKey<PatientRecord, UserAccountRecord> PATIENT__PATIENT_USER_ACCOUNT_ID_FK = Internal.createForeignKey(de.wirvsvirus.zentralesmelderegister.model.jooq.Keys.USER_ACCOUNT_PK, Patient.PATIENT, "patient__patient_user_account_id_fk", Patient.PATIENT.USER_ACCOUNT_ID);
         public static final ForeignKey<TestRecord, TestResultRecord> TEST__TEST_TEST_RESULT_ID_FK = Internal.createForeignKey(de.wirvsvirus.zentralesmelderegister.model.jooq.Keys.TEST_RESULT_PK, Test.TEST, "test__test_test_result_id_fk", Test.TEST.TEST_RESULT_ID);
         public static final ForeignKey<TestRecord, PatientRecord> TEST__TEST_PATIENT_ID_FK = Internal.createForeignKey(de.wirvsvirus.zentralesmelderegister.model.jooq.Keys.PATIENT_PK, Test.TEST, "test__test_patient_id_fk", Test.TEST.PATIENT_ID);
+        public static final ForeignKey<UserAuthorityRecord, UserAccountRecord> USER_AUTHORITY__USER_AUTHORITY___FK___USER_ACCOCUNT = Internal.createForeignKey(de.wirvsvirus.zentralesmelderegister.model.jooq.Keys.USER_ACCOUNT_PK, UserAuthority.USER_AUTHORITY, "user_authority__user_authority___fk___user_accocunt", UserAuthority.USER_AUTHORITY.USER_ACCOUNT_ID);
     }
 }

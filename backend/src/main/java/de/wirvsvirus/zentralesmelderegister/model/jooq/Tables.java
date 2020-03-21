@@ -14,6 +14,7 @@ import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.State;
 import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.Test;
 import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.TestResult;
 import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.UserAccount;
+import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.UserAuthority;
 
 import javax.annotation.Generated;
 
@@ -80,4 +81,9 @@ public class Tables {
      * The table <code>public.user_account</code>.
      */
     public static final UserAccount USER_ACCOUNT = de.wirvsvirus.zentralesmelderegister.model.jooq.tables.UserAccount.USER_ACCOUNT;
+
+    /**
+     * The table <code>public.user_authority</code>.
+     */
+    public static final UserAuthority USER_AUTHORITY = de.wirvsvirus.zentralesmelderegister.model.jooq.tables.UserAuthority.USER_AUTHORITY;
 }

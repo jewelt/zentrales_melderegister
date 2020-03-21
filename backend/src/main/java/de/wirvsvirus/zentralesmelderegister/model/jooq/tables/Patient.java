@@ -42,7 +42,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Patient extends TableImpl<PatientRecord> {
 
-    private static final long serialVersionUID = 115800686;
+    private static final long serialVersionUID = -1943129154;
 
     /**
      * The reference instance of <code>public.patient</code>
@@ -71,6 +71,11 @@ public class Patient extends TableImpl<PatientRecord> {
      * The column <code>public.patient.city_id</code>.
      */
     public final TableField<PatientRecord, Long> CITY_ID = createField("city_id", org.jooq.impl.SQLDataType.BIGINT, this, "");
+
+    /**
+     * The column <code>public.patient.user_account_id</code>.
+     */
+    public final TableField<PatientRecord, Long> USER_ACCOUNT_ID = createField("user_account_id", org.jooq.impl.SQLDataType.BIGINT.nullable(false), this, "");
 
     /**
      * Create a <code>public.patient</code> table reference
@@ -150,11 +155,15 @@ public class Patient extends TableImpl<PatientRecord> {
      */
     @Override
     public List<ForeignKey<PatientRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<PatientRecord, ?>>asList(Keys.PATIENT__PATIENT_CITY_ID_FK);
+        return Arrays.<ForeignKey<PatientRecord, ?>>asList(Keys.PATIENT__PATIENT_CITY_ID_FK, Keys.PATIENT__PATIENT_USER_ACCOUNT_ID_FK);
     }
 
     public City city() {
         return new City(this, Keys.PATIENT__PATIENT_CITY_ID_FK);
+    }
+
+    public UserAccount userAccount() {
+        return new UserAccount(this, Keys.PATIENT__PATIENT_USER_ACCOUNT_ID_FK);
     }
 
     /**

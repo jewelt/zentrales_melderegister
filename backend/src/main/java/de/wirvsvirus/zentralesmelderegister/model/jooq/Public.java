@@ -14,6 +14,7 @@ import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.State;
 import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.Test;
 import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.TestResult;
 import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.UserAccount;
+import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.UserAuthority;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,7 +41,7 @@ import org.jooq.impl.SchemaImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Public extends SchemaImpl {
 
-    private static final long serialVersionUID = -1936062892;
+    private static final long serialVersionUID = -792941448;
 
     /**
      * The reference instance of <code>public</code>
@@ -98,6 +99,11 @@ public class Public extends SchemaImpl {
     public final UserAccount USER_ACCOUNT = de.wirvsvirus.zentralesmelderegister.model.jooq.tables.UserAccount.USER_ACCOUNT;
 
     /**
+     * The table <code>public.user_authority</code>.
+     */
+    public final UserAuthority USER_AUTHORITY = de.wirvsvirus.zentralesmelderegister.model.jooq.tables.UserAuthority.USER_AUTHORITY;
+
+    /**
      * No further instances allowed
      */
     private Public() {
@@ -151,6 +157,7 @@ public class Public extends SchemaImpl {
             State.STATE,
             Test.TEST,
             TestResult.TEST_RESULT,
-            UserAccount.USER_ACCOUNT);
+            UserAccount.USER_ACCOUNT,
+            UserAuthority.USER_AUTHORITY);
     }
 }

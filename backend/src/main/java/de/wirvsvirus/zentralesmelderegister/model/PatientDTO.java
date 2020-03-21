@@ -15,12 +15,13 @@ public class PatientDTO {
 
     private Long id;
     private OffsetDateTime birthday;
+    private Long cityId;
 
     public PatientDTO(PatientRecord patientRecord) {
         this.id = patientRecord.getId();
         if (patientRecord.getBirthday() != null) {
             this.birthday = patientRecord.getBirthday();
         }
-
+        this.cityId = patientRecord.getCityId();
     }
 }

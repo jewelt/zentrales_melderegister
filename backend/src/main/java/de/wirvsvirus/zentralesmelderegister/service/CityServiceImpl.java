@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 public class CityServiceImpl implements CityService {
 
     private final DSLContext dslContext;
+    private final UserAccountService userAccountService;
 
     @Override
     public CityDTO createCityDTO(CityDTO cityDTO) {
@@ -96,6 +97,17 @@ public class CityServiceImpl implements CityService {
         log.debug("get all cities by country id: " + countryId);
         return this.dslContext.select().from(Tables.CITY)
                 .where(Tables.CITY.COUNTRY_ID.eq(countryId))
+                .fetchInto(CityRecord.class)
+                .stream().map(CityDTO::new)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<CityDTO> getAllCitiesByUser() {
+        final long userAccountId = userAccountService.getCurrentUserId();
+        log.debug("get all cities by user id: " + userAccountId);
+        return this.dslContext.select().from(Tables.CITY)
+                .where(Tables.CITY.USER_ACCOUNT_ID.eq(userAccountId))
                 .fetchInto(CityRecord.class)
                 .stream().map(CityDTO::new)
                 .collect(Collectors.toList());

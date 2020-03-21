@@ -54,4 +54,9 @@ public class CityController {
         return this.cityService.getAllCitiesByCountryId(countryId);
     }
 
+    @GetMapping("/city/user")
+    public List<CityDTO> getAllCitiesByUser() {
+        log.debug("request to get all cities by user");
+        return this.cityService.getAllCitiesByUser();
+    }
 }

@@ -42,7 +42,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class City extends TableImpl<CityRecord> {
 
-    private static final long serialVersionUID = 269082457;
+    private static final long serialVersionUID = 1726909501;
 
     /**
      * The reference instance of <code>public.city</code>
@@ -81,6 +81,11 @@ public class City extends TableImpl<CityRecord> {
      * The column <code>public.city.country_id</code>.
      */
     public final TableField<CityRecord, Long> COUNTRY_ID = createField("country_id", org.jooq.impl.SQLDataType.BIGINT, this, "");
+
+    /**
+     * The column <code>public.city.user_account_id</code>.
+     */
+    public final TableField<CityRecord, Long> USER_ACCOUNT_ID = createField("user_account_id", org.jooq.impl.SQLDataType.BIGINT.nullable(false), this, "");
 
     /**
      * Create a <code>public.city</code> table reference
@@ -160,11 +165,15 @@ public class City extends TableImpl<CityRecord> {
      */
     @Override
     public List<ForeignKey<CityRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<CityRecord, ?>>asList(Keys.CITY__CITY_COUNTY_ID_FK);
+        return Arrays.<ForeignKey<CityRecord, ?>>asList(Keys.CITY__CITY_COUNTY_ID_FK, Keys.CITY__CITY_USER_ACCOUNT_ID_FK);
     }
 
     public Country country() {
         return new Country(this, Keys.CITY__CITY_COUNTY_ID_FK);
+    }
+
+    public UserAccount userAccount() {
+        return new UserAccount(this, Keys.CITY__CITY_USER_ACCOUNT_ID_FK);
     }
 
     /**

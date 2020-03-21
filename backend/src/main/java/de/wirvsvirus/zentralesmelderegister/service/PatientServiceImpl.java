@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 public class PatientServiceImpl implements PatientService {
 
     private final DSLContext dslContext;
+    private final UserAccountService userAccountService;
 
     @Override
     public PatientDTO createPatientDTO(PatientDTO patientDTO) {
@@ -31,6 +32,8 @@ public class PatientServiceImpl implements PatientService {
         log.debug("Insert patient: " + patientDTO.toString());
         return this.dslContext.insertInto(Tables.PATIENT)
                 .set(Tables.PATIENT.BIRTHDAY, patientDTO.getBirthday())
+                .set(Tables.PATIENT.CITY_ID, patientDTO.getCityId())
+                .set(Tables.PATIENT.USER_ACCOUNT_ID, userAccountService.getCurrentUserId())
                 .returning().fetchOptional().map(PatientDTO::new)
                 .orElseThrow(() -> new InternalServerErrorException(
                         "Could not insert patient"));
@@ -67,6 +70,7 @@ public class PatientServiceImpl implements PatientService {
         log.debug("Update patient: " + patientDTO.toString());
         final int affectedRows = this.dslContext.update(Tables.PATIENT)
                 .set(Tables.PATIENT.BIRTHDAY, patientDTO.getBirthday())
+                .set(Tables.PATIENT.CITY_ID, patientDTO.getCityId())
                 .where(Tables.PATIENT.ID.eq(patientDTO.getId()))
                 .execute();
 

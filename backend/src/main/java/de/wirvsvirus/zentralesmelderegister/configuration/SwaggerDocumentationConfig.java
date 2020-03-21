@@ -2,6 +2,7 @@ package de.wirvsvirus.zentralesmelderegister.configuration;
 
 import com.fasterxml.classmate.TypeResolver;
 import com.google.common.collect.Lists;
+import de.wirvsvirus.zentralesmelderegister.security.jwt.JWTFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.ResponseEntity;
@@ -20,18 +21,23 @@ import java.util.List;
 
 import static springfox.documentation.schema.AlternateTypeRules.newRule;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2019-04-07T13:24:08.298Z[GMT]")
 @Configuration
 public class SwaggerDocumentationConfig {
 
 
     public static final String DEFAULT_INCLUDE_PATTERN = "/anyPath.*";
 
+    private final TypeResolver typeResolver;
+
+
+    public SwaggerDocumentationConfig(TypeResolver typeResolver) {
+        this.typeResolver = typeResolver;
+    }
 
     ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("Melderegister")
-                .description("")
+                .title("Zentrales Melderegister")
+                .description("Zentrales Melderegister")
                 .license("")
                 .termsOfServiceUrl("")
                 .version("0.0.1")
@@ -52,13 +58,20 @@ public class SwaggerDocumentationConfig {
 //                .directModelSubstitute(LocalDateTime.class, String.class)
 //                .directModelSubstitute(ZonedDateTime.class, String.class)
                 .genericModelSubstitutes(ResponseEntity.class)
+                .alternateTypeRules(
+                        newRule(typeResolver.resolve(DeferredResult.class,
+                                typeResolver.resolve(ResponseEntity.class, WildcardType.class)),
+                                typeResolver.resolve(WildcardType.class)))
                 .useDefaultResponseMessages(true)
-                .securityContexts(Arrays.asList(actuatorSecurityContext()))
-                .securitySchemes(Arrays.asList(basicAuthScheme()))
+                .securityContexts(Lists.newArrayList(securityContext()))
+                .securitySchemes(Lists.newArrayList(apiKey()))
                 .apiInfo(apiInfo());
     }
 
 
+    private ApiKey apiKey() {
+        return new ApiKey("JWT", JWTFilter.AUTHORIZATION_HEADER, "header");
+    }
 
     @Bean
     SecurityContext securityContext() {
@@ -77,20 +90,4 @@ public class SwaggerDocumentationConfig {
         return Lists.newArrayList(
                 new SecurityReference("JWT", authorizationScopes));
     }
-
-    private SecurityContext actuatorSecurityContext() {
-        return SecurityContext.builder()
-                .securityReferences(Arrays.asList(basicAuthReference()))
-                .forPaths(PathSelectors.ant("/actuator/**"))
-                .build();
-    }
-
-    private SecurityScheme basicAuthScheme() {
-        return new BasicAuth("basicAuth");
-    }
-
-    private SecurityReference basicAuthReference() {
-        return new SecurityReference("basicAuth", new AuthorizationScope[0]);
-    }
-
 }

@@ -15,4 +15,6 @@ public interface CityService {
 
 
     List<CityDTO> getAllCitiesByCountryId(long countryId);
+
+    List<CityDTO> getAllCitiesByUser();
 }
