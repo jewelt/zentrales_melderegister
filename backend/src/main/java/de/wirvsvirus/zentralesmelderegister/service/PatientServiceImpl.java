@@ -13,6 +13,7 @@ import de.wirvsvirus.zentralesmelderegister.web.errors.ResourceNotFoundException
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jooq.DSLContext;
+import org.jooq.Table;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -44,6 +45,7 @@ public class PatientServiceImpl implements PatientService {
         log.debug("Get patient with id " + patientId);
         return this.dslContext.selectFrom(Tables.PATIENT)
                 .where(Tables.PATIENT.ID.eq(patientId))
+                .and(Tables.PATIENT.USER_ACCOUNT_ID.eq(userAccountService.getCurrentUserId()))
                 .fetchOptional()
                 .map(PatientDTO::new)
                 .orElseThrow(() -> new ResourceNotFoundException("Test Patient with id " + patientId + " was not found."));
@@ -54,6 +56,7 @@ public class PatientServiceImpl implements PatientService {
         log.debug("Delete patient with id " + patientId);
         final int affectedRows = this.dslContext.delete(Tables.PATIENT)
                 .where(Tables.PATIENT.ID.eq(patientId))
+                .and(Tables.PATIENT.USER_ACCOUNT_ID.eq(userAccountService.getCurrentUserId()))
                 .execute();
         if (affectedRows == 1) {
             log.debug("Successful delete. 1 row affected");
@@ -72,6 +75,7 @@ public class PatientServiceImpl implements PatientService {
                 .set(Tables.PATIENT.BIRTHDAY, patientDTO.getBirthday())
                 .set(Tables.PATIENT.CITY_ID, patientDTO.getCityId())
                 .where(Tables.PATIENT.ID.eq(patientDTO.getId()))
+                .and(Tables.PATIENT.USER_ACCOUNT_ID.eq(userAccountService.getCurrentUserId()))
                 .execute();
 
         if (affectedRows == 1) {
@@ -91,7 +95,10 @@ public class PatientServiceImpl implements PatientService {
         return this.dslContext.select().from(Tables.DOCTOR)
                 .join(Tables.DOCTOR_PATIENT)
                 .on(Tables.DOCTOR_PATIENT.DOCTOR_ID.eq(Tables.DOCTOR.ID))
+                .join(Tables.PATIENT)
+                .on(Tables.PATIENT.ID.eq(Tables.DOCTOR_PATIENT.ID))
                 .where(Tables.DOCTOR_PATIENT.PATIENT_ID.eq(patientId))
+                .and(Tables.PATIENT.USER_ACCOUNT_ID.eq(userAccountService.getCurrentUserId()))
                 .fetchInto(DoctorRecord.class)
                 .stream().map(DoctorDTO::new)
                 .collect(Collectors.toList());
@@ -118,6 +125,7 @@ public class PatientServiceImpl implements PatientService {
     public List<PatientDTO> getAllPatients() {
         log.debug("get all patients");
         return this.dslContext.select().from(Tables.PATIENT)
+                .where(Tables.PATIENT.USER_ACCOUNT_ID.eq(userAccountService.getCurrentUserId()))
                 .fetchInto(PatientRecord.class)
                 .stream().map(PatientDTO::new)
                 .collect(Collectors.toList());
