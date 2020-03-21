@@ -1,13 +1,19 @@
 package de.wirvsvirus.zentralesmelderegister.service;
 
+import de.wirvsvirus.zentralesmelderegister.model.CityDTO;
 import de.wirvsvirus.zentralesmelderegister.model.CountryDTO;
 import de.wirvsvirus.zentralesmelderegister.model.jooq.Tables;
+import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.records.CityRecord;
+import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.records.CountryRecord;
 import de.wirvsvirus.zentralesmelderegister.web.errors.InternalServerErrorException;
 import de.wirvsvirus.zentralesmelderegister.web.errors.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -58,7 +64,7 @@ public class CountryServiceImpl implements CountryService {
 
     @Override
     public void updateCountry(CountryDTO countryDTO) {
-        log.debug("Insert country: " + countryDTO.toString());
+        log.debug("update country: " + countryDTO.toString());
         final int affectedRows = this.dslContext.update(Tables.TEST_RESULT)
                 .set(Tables.COUNTRY.STATE_ID, countryDTO.getStateId())
                 .set(Tables.COUNTRY.COORDINATES_LATITUDE, countryDTO.getCoordinatesLatitude())
@@ -75,5 +81,25 @@ public class CountryServiceImpl implements CountryService {
             throw new InternalServerErrorException(
                     "Could not country with id " + countryDTO.getId());
         }
+    }
+
+    @Override
+    public List<CountryDTO> getAllCountries() {
+        log.debug("get all countries");
+        return this.dslContext.select().from(Tables.COUNTRY)
+                .fetchInto(CountryRecord.class)
+                .stream().map(CountryDTO::new)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<CountryDTO> getAllCountriesByStateId(long stateId) {
+
+        log.debug("get all countries by state id: " + stateId);
+        return this.dslContext.select().from(Tables.COUNTRY)
+                .where(Tables.COUNTRY.STATE_ID.eq(stateId))
+                .fetchInto(CountryRecord.class)
+                .stream().map(CountryDTO::new)
+                .collect(Collectors.toList());
     }
 }
