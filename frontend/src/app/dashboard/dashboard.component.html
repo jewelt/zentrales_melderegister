@@ -12,15 +12,70 @@
           <mat-card-content class="chart-box" *ngSwitchCase="diagramType.ANZAHL_BUNDESLAND">
             <ngx-charts-bar-vertical
               [results]="infectedByState"
-              [gradient]="gradient"
-              [xAxis]="showXAxis"
-              [yAxis]="showYAxis"
-              [legend]="showLegend"
-              [showXAxisLabel]="showXAxisLabel"
-              [showYAxisLabel]="showYAxisLabel"
-              [xAxisLabel]="xAxisLabel"
-              [yAxisLabel]="yAxisLabel"
-              (select)="onSelect($event)">
+              [gradient]="false"
+              [xAxis]="true"
+              [yAxis]="true"
+              [legend]="true"
+              [showXAxisLabel]="true"
+              [showYAxisLabel]="true"
+              [xAxisLabel]="'Bundesland'"
+              [yAxisLabel]="'Anzahl'">
+            </ngx-charts-bar-vertical>
+          </mat-card-content>
+
+          <mat-card-content class="chart-box" *ngSwitchCase="diagramType.ANZAHL_ALTER">
+            <ngx-charts-bar-vertical
+              [results]="infectedByAge"
+              [gradient]="false"
+              [xAxis]="true"
+              [yAxis]="true"
+              [legend]="true"
+              [showXAxisLabel]="true"
+              [showYAxisLabel]="true"
+              [xAxisLabel]="'Alter'"
+              [yAxisLabel]="'Anzahl'">
+            </ngx-charts-bar-vertical>
+          </mat-card-content>
+
+          <mat-card-content class="chart-box" *ngSwitchCase="diagramType.ANZAHL_TAG">
+            <ngx-charts-bar-vertical
+              [results]="infectedByDay"
+              [gradient]="false"
+              [xAxis]="true"
+              [yAxis]="true"
+              [legend]="true"
+              [showXAxisLabel]="true"
+              [showYAxisLabel]="true"
+              [xAxisLabel]="'Tag'"
+              [yAxisLabel]="'Anzahl'">
+            </ngx-charts-bar-vertical>
+          </mat-card-content>
+
+          <mat-card-content class="chart-box" *ngSwitchCase="diagramType.ZUWACHS_BUNDESLAND">
+            <ngx-charts-bar-vertical
+              [results]="growthByStateToday"
+              [gradient]="false"
+              [xAxis]="true"
+              [yAxis]="true"
+              [legend]="true"
+              [showXAxisLabel]="true"
+              [showYAxisLabel]="true"
+              [xAxisLabel]="'Bundesland'"
+              [yAxisLabel]="'Anzahl'">
+            </ngx-charts-bar-vertical>
+          </mat-card-content>
+
+          <mat-card-content class="chart-box" *ngSwitchCase="diagramType.ZUWACHS_TAG">
+            <ngx-charts-bar-vertical
+              [results]="growthByDay"
+              [gradient]="false"
+              [xAxis]="true"
+              [yAxis]="true"
+              [legend]="true"
+              [showXAxisLabel]="true"
+              [showYAxisLabel]="true"
+              [xAxisLabel]="'Tag'"
+              [yAxisLabel]="'Anzahl'">
             </ngx-charts-bar-vertical>
           </mat-card-content>
         </ng-container>

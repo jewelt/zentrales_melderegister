@@ -14,31 +14,32 @@ export class DashboardComponent implements OnInit {
     map(({matches}) => {
       if (matches) {
         return [
-          {title: 'Anzahl nach Bundesland', cols: 2, rows: 1, type: DiagramType.ANZAHL_BUNDESLAND},
-          {title: 'Bundesland', cols: 2, rows: 1}
+          {title: 'Anzahl nach Bundesland', cols: 2, rows: 3, type: DiagramType.ANZAHL_BUNDESLAND},
+          {title: 'Anzahl nach Alter', cols: 2, rows: 3, type: DiagramType.ANZAHL_ALTER},
+          {title: 'Gesamtanzahl nach Tag', cols: 2, rows: 3, type: DiagramType.ANZAHL_TAG},
+          {title: 'Heutige Anzahl nach Bundesland', cols: 2, rows: 3, type: DiagramType.ZUWACHS_BUNDESLAND},
+          {title: 'Neuinfektionen nach Tag', cols: 2, rows: 3, type: DiagramType.ZUWACHS_TAG}
         ];
       }
 
       return [
         {title: 'Anzahl nach Bundesland', cols: 1, rows: 1, type: DiagramType.ANZAHL_BUNDESLAND},
-        {title: 'Bundesland', cols: 1, rows: 1}
+        {title: 'Anzahl nach Alter', cols: 1, rows: 1, type: DiagramType.ANZAHL_ALTER},
+        {title: 'Gesamtanzahl nach Tag', cols: 1, rows: 1, type: DiagramType.ANZAHL_TAG},
+        {title: 'Heutige Anzahl nach Bundesland', cols: 1, rows: 1, type: DiagramType.ZUWACHS_BUNDESLAND},
+        {title: 'Neuinfektionen nach Tag', cols: 1, rows: 1, type: DiagramType.ZUWACHS_TAG}
       ];
     })
   );
 
-  // options
-  showXAxis = true;
-  showYAxis = true;
-  gradient = false;
-  showLegend = true;
-  showXAxisLabel = true;
-  yAxisLabel = 'Country';
-  showYAxisLabel = true;
-  xAxisLabel = 'Normalized Population';
   diagramType = DiagramType;
 
   // data goes here
   public infectedByState = [];
+  public infectedByAge = [];
+  public infectedByDay = [];
+  public growthByDay = [];
+  public growthByStateToday = [];
 
   constructor(private breakpointObserver: BreakpointObserver,
               private statisticsControllerService: StatisticsControllerService) {
@@ -52,13 +53,67 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
 
     this.statisticsControllerService.getCountByStateNowUsingGET().subscribe((data) => {
+      console.log('By State');
+      console.log(data);
       this.infectedByState = data;
     });
 
+    this.statisticsControllerService.getCountByAgeUsingGET().subscribe(data => {
+      console.log('By Age');
+      console.log(data);
+      this.infectedByAge = data.map(age => ({
+        value: age.value,
+        name: age.age
+      })).sort((a, b) => {
+        if (a.name > b.name) {
+          return 1;
+        } else if (a.name < b.name) {
+          return -1;
+        } else {
+          return 0;
+        }
+      });
+    });
+
+    this.statisticsControllerService.getCountByDayUsingGET().subscribe(data => {
+      console.log('By Day');
+      console.log(data);
+      this.infectedByDay = data.map(countByDay => ({
+        value: countByDay.value,
+        name: countByDay.date
+      }));
+    });
+
+    this.statisticsControllerService.getGrowthByDayUsingGET().subscribe(data => {
+      console.log('Growth By Age');
+      console.log(data);
+      this.growthByDay = data.map(countByDay => ({
+        value: countByDay.value,
+        name: countByDay.date
+      })).sort((a, b) => {
+        if (a.name > b.name) {
+          return 1;
+        } else if (a.name < b.name) {
+          return -1;
+        } else {
+          return 0;
+        }
+      });
+    });
+
+    this.statisticsControllerService.getGrowthByStateTodayUsingGET().subscribe(data => {
+      console.log('Growth by State');
+      console.log(data);
+      this.growthByStateToday = data;
+    });
 
   }
 }
 
 enum DiagramType {
-  ANZAHL_BUNDESLAND = 1
+  ANZAHL_BUNDESLAND = 1,
+  ANZAHL_ALTER,
+  ANZAHL_TAG,
+  ZUWACHS_TAG,
+  ZUWACHS_BUNDESLAND
 }
