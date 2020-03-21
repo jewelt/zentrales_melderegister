@@ -1,4 +1,7 @@
 export * from './cityDTO';
+export * from './countByAge';
+export * from './countByDay';
+export * from './countByState';
 export * from './countryDTO';
 export * from './createUserRequest';
 export * from './doctorDTO';

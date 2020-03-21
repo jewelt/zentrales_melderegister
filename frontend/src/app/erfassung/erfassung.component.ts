@@ -44,15 +44,20 @@ export class ErfassungComponent implements OnInit {
       birthdate: this.fb.control('', Validators.required),
       doctor: this.fb.control('', Validators.required),
       testdate: this.fb.control(moment(), Validators.required),
-      testtime: this.fb.control('', Validators.required),
+      testtime: this.fb.control(moment().hour() + ':' + moment().minute()),
       resultdate: this.fb.control(moment(), Validators.required),
-      resulttime: this.fb.control('', Validators.required),
+      resulttime: this.fb.control(moment().hour() + ':' + moment().minute()),
       testresult: this.fb.control('', Validators.required),
       city: this.fb.control('', Validators.required),
     });
   }
 
   onSave() {
+
+    if (!this.formGroup.valid) {
+      return;
+    }
+
     const birthday = this.formGroup.get('birthdate').value as moment.Moment;
     const doctor = this.formGroup.get('doctor').value;
     const testdate = this.formGroup.get('testdate').value as moment.Moment;

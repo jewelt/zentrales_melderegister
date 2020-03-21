@@ -1,9 +1,9 @@
 <div style="display: flex">
   <mat-form-field>
-    <input matInput [formControl]="formControlHour" />
+    <input #hourInput matInput [formControl]="formControlHour" (click)="hourInput.select()" />
     <span style="margin-right: 4px" matSuffix>:</span>
   </mat-form-field>
   <mat-form-field>
-    <input #minuteInput matInput [formControl]="formControlMinute" />
+    <input #minuteInput matInput [formControl]="formControlMinute" (click)="minuteInput.select()" />
   </mat-form-field>
 </div>

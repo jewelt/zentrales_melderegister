@@ -8,6 +8,7 @@ import { CountryControllerService } from './api/countryController.service';
 import { DoctorControllerService } from './api/doctorController.service';
 import { PatientControllerService } from './api/patientController.service';
 import { StateControllerService } from './api/stateController.service';
+import { StatisticsControllerService } from './api/statisticsController.service';
 import { TestControllerService } from './api/testController.service';
 import { TestResultControllerService } from './api/testResultController.service';
 import { UserAccountApiControllerService } from './api/userAccountApiController.service';
@@ -23,6 +24,7 @@ import { UserJwtApiControllerService } from './api/userJwtApiController.service'
     DoctorControllerService,
     PatientControllerService,
     StateControllerService,
+    StatisticsControllerService,
     TestControllerService,
     TestResultControllerService,
     UserAccountApiControllerService,

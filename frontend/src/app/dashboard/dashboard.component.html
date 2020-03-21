@@ -8,20 +8,23 @@
             {{card.title}}
           </mat-card-title>
         </mat-card-header>
-        <mat-card-content class="chart-box">
-          <ngx-charts-bar-vertical
-            [results]="data"
-            [gradient]="gradient"
-            [xAxis]="showXAxis"
-            [yAxis]="showYAxis"
-            [legend]="showLegend"
-            [showXAxisLabel]="showXAxisLabel"
-            [showYAxisLabel]="showYAxisLabel"
-            [xAxisLabel]="xAxisLabel"
-            [yAxisLabel]="yAxisLabel"
-            (select)="onSelect($event)">
+        <ng-container [ngSwitch]="card.type">
+          <mat-card-content class="chart-box" *ngSwitchCase="diagramType.ANZAHL_BUNDESLAND">
+            <ngx-charts-bar-vertical
+              [results]="infectedByState"
+              [gradient]="gradient"
+              [xAxis]="showXAxis"
+              [yAxis]="showYAxis"
+              [legend]="showLegend"
+              [showXAxisLabel]="showXAxisLabel"
+              [showYAxisLabel]="showYAxisLabel"
+              [xAxisLabel]="xAxisLabel"
+              [yAxisLabel]="yAxisLabel"
+              (select)="onSelect($event)">
             </ngx-charts-bar-vertical>
-        </mat-card-content>
+          </mat-card-content>
+        </ng-container>
+
       </mat-card>
     </mat-grid-tile>
   </mat-grid-list>

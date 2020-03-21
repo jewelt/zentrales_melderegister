@@ -4,7 +4,7 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {
   CityControllerService,
-  LoginRequest, PatientControllerService,
+  LoginRequest, PatientControllerService, StatisticsControllerService,
   TestControllerService,
   TestResultControllerService,
   UserJwtApiControllerService
@@ -20,6 +20,7 @@ export class AuthService {
               private cityControllerService: CityControllerService,
               private testControllerService: TestControllerService,
               private patientControllerService: PatientControllerService,
+              private statisticsControllerService: StatisticsControllerService,
               private testResultControllerService: TestResultControllerService) {
     this.setApiKeys({});
   }
@@ -41,6 +42,7 @@ export class AuthService {
     this.testControllerService.configuration.apiKeys = keys;
     this.testResultControllerService.configuration.apiKeys = keys;
     this.patientControllerService.configuration.apiKeys = keys;
+    this.statisticsControllerService.configuration.apiKeys = keys;
   }
 
 }
