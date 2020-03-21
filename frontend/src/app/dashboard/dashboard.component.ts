@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {map} from 'rxjs/operators';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 import {StatisticsControllerService} from '../clients/melderegister';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-dashboard',
@@ -40,6 +41,7 @@ export class DashboardComponent implements OnInit {
   public infectedByDay = [];
   public growthByDay = [];
   public growthByStateToday = [];
+  public timestamp: string;
 
   constructor(private breakpointObserver: BreakpointObserver,
               private statisticsControllerService: StatisticsControllerService) {
@@ -51,7 +53,14 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.loadData();
+    setInterval(() => {
+      this.loadData();
+    }, 60000);
+  }
 
+  private loadData() {
+    this.timestamp = moment().format('DD.MM.YYYY HH:mm');
     this.statisticsControllerService.getCountByStateNowUsingGET().subscribe((data) => {
       console.log('By State');
       console.log(data);
@@ -106,7 +115,6 @@ export class DashboardComponent implements OnInit {
       console.log(data);
       this.growthByStateToday = data;
     });
-
   }
 }
 

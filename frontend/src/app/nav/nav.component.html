@@ -12,13 +12,17 @@
         <mat-icon mat-list-icon>dashboard</mat-icon>
         <div mat-line>Dashboard</div>
       </a>
-      <a mat-list-item class="nav-list-item" routerLink="/erfassung" routerLinkActive="active-link">
+      <a mat-list-item class="nav-list-item" routerLink="/erfassung" routerLinkActive="active-link" *ngIf="isUser">
         <mat-icon mat-list-icon>add</mat-icon>
         <div mat-line>Erfassung</div>
       </a>
       <a mat-list-item class="nav-list-item" routerLink="/test-list" routerLinkActive="active-link">
         <mat-icon mat-list-icon>list</mat-icon>
         <div mat-line>Testliste</div>
+      </a>
+      <a mat-list-item class="nav-list-item" routerLink="/tabelle" routerLinkActive="active-link">
+        <mat-icon mat-list-icon>list</mat-icon>
+        <div mat-line>Einsicht</div>
       </a>
     </mat-list>
   </mat-sidenav>

@@ -1,5 +1,9 @@
 <div class="grid-container">
-  <h1 class="mat-h1">Dashboard</h1>
+  <div style="display: flex;">
+    <h1 class="mat-h1">Dashboard</h1>
+    <span style="flex: auto;"></span>
+    <span style="margin-top: 5px">{{timestamp}}</span>
+  </div>
   <mat-grid-list cols="2" rowHeight="4:3">
     <mat-grid-tile *ngFor="let card of cards | async" [colspan]="card.cols" [rowspan]="card.rows">
       <mat-card class="dashboard-card">

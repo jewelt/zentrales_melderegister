@@ -33,6 +33,7 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatMomentDateModule, MomentDateAdapter} from '@angular/material-moment-adapter';
 import { TimepickerComponent } from './timepicker/timepicker.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { TabelleComponent } from './tabelle/tabelle.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
     DashboardComponent,
     ErfassungComponent,
     TestListComponent,
-    TimepickerComponent
+    TimepickerComponent,
+    TabelleComponent
   ],
   imports: [
     BrowserModule,

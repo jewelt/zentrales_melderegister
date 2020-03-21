@@ -6,7 +6,7 @@ import {
   CityControllerService,
   LoginRequest, PatientControllerService, StatisticsControllerService,
   TestControllerService,
-  TestResultControllerService,
+  TestResultControllerService, UserAccountApiControllerService,
   UserJwtApiControllerService
 } from '../clients/melderegister';
 
@@ -20,6 +20,7 @@ export class AuthService {
               private cityControllerService: CityControllerService,
               private testControllerService: TestControllerService,
               private patientControllerService: PatientControllerService,
+              private userAccountApiControllerService: UserAccountApiControllerService,
               private statisticsControllerService: StatisticsControllerService,
               private testResultControllerService: TestResultControllerService) {
     this.setApiKeys({});
@@ -30,10 +31,10 @@ export class AuthService {
   login(loginRequest: LoginRequest): Observable<void> {
     this.userJwtApiControllerService.configuration.apiKeys = {};
     return this.userJwtApiControllerService.authorizeUsingPOST(loginRequest).pipe(map(response => {
-      this.authenticated$.next(true);
       this.setApiKeys({
         'X-Melderegister-Authorization': 'Bearer ' + (response as any).id_token
       });
+      this.authenticated$.next(true);
     }));
   }
 
@@ -43,6 +44,7 @@ export class AuthService {
     this.testResultControllerService.configuration.apiKeys = keys;
     this.patientControllerService.configuration.apiKeys = keys;
     this.statisticsControllerService.configuration.apiKeys = keys;
+    this.userAccountApiControllerService.configuration.apiKeys = keys;
   }
 
 }
