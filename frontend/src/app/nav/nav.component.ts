@@ -5,7 +5,7 @@ import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {AuthService} from '../services/auth.service';
 import {Router} from '@angular/router';
-import {UserAccountApiControllerService} from "../clients/melderegister";
+import {UserAccountApiControllerService} from '../clients/melderegister';
 
 @Component({
   selector: 'app-nav',
@@ -66,6 +66,8 @@ export class NavComponent implements OnInit {
       rememberMe: stayLoggedIn
     }).subscribe(() => {
       console.log('Navigation to dashboard');
+      this.loadingLogin = false;
+      this.isLoginErrorVisible = false;
       this.router.navigate(['/dashboard']);
     }, error => {
       console.error(error);
@@ -80,7 +82,7 @@ export class NavComponent implements OnInit {
   }
 
   logout() {
-    // TODO: Logout
+    this.authenticationService.logout();
   }
 
 }

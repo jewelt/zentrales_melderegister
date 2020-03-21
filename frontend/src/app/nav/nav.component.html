@@ -5,7 +5,7 @@
                [mode]="(isHandset$ | async) ? 'over' : 'side'"
                [opened]="(isHandset$ | async) === false">
     <mat-toolbar>
-        <h3>Navigation</h3>
+      <h3>Navigation</h3>
     </mat-toolbar>
     <mat-list>
       <a mat-list-item class="nav-list-item" routerLink="/dashboard" routerLinkActive="active-link">
@@ -16,11 +16,11 @@
         <mat-icon mat-list-icon>add</mat-icon>
         <div mat-line>Erfassung</div>
       </a>
-      <a mat-list-item class="nav-list-item" routerLink="/test-list" routerLinkActive="active-link">
+      <a mat-list-item class="nav-list-item" routerLink="/test-list" routerLinkActive="active-link" *ngIf="isUser">
         <mat-icon mat-list-icon>list</mat-icon>
         <div mat-line>Testliste</div>
       </a>
-      <a mat-list-item class="nav-list-item" routerLink="/tabelle" routerLinkActive="active-link">
+      <a mat-list-item class="nav-list-item" routerLink="/tabelle" routerLinkActive="active-link" *ngIf="isAdmin">
         <mat-icon mat-list-icon>list</mat-icon>
         <div mat-line>Einsicht</div>
       </a>

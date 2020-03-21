@@ -62,14 +62,10 @@ export class DashboardComponent implements OnInit {
   private loadData() {
     this.timestamp = moment().format('DD.MM.YYYY HH:mm');
     this.statisticsControllerService.getCountByStateNowUsingGET().subscribe((data) => {
-      console.log('By State');
-      console.log(data);
       this.infectedByState = data;
     });
 
     this.statisticsControllerService.getCountByAgeUsingGET().subscribe(data => {
-      console.log('By Age');
-      console.log(data);
       this.infectedByAge = data.map(age => ({
         value: age.value,
         name: age.age
@@ -85,8 +81,6 @@ export class DashboardComponent implements OnInit {
     });
 
     this.statisticsControllerService.getCountByDayUsingGET().subscribe(data => {
-      console.log('By Day');
-      console.log(data);
       this.infectedByDay = data.map(countByDay => ({
         value: countByDay.value,
         name: countByDay.date
@@ -94,8 +88,6 @@ export class DashboardComponent implements OnInit {
     });
 
     this.statisticsControllerService.getGrowthByDayUsingGET().subscribe(data => {
-      console.log('Growth By Age');
-      console.log(data);
       this.growthByDay = data.map(countByDay => ({
         value: countByDay.value,
         name: countByDay.date
@@ -111,8 +103,6 @@ export class DashboardComponent implements OnInit {
     });
 
     this.statisticsControllerService.getGrowthByStateTodayUsingGET().subscribe(data => {
-      console.log('Growth by State');
-      console.log(data);
       this.growthByStateToday = data;
     });
   }

@@ -38,6 +38,11 @@ export class AuthService {
     }));
   }
 
+  logout() {
+    this.setApiKeys({});
+    this.authenticated$.next(false);
+  }
+
   private setApiKeys(keys: any) {
     this.cityControllerService.configuration.apiKeys = keys;
     this.testControllerService.configuration.apiKeys = keys;
