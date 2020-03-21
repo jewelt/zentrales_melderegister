@@ -24,7 +24,10 @@ import {LayoutModule} from '@angular/cdk/layout';
 import {TestComponent} from './test/test.component';
 import { ErfassungComponent } from './erfassung/erfassung.component';
 import {MatOptionModule} from "@angular/material/core";
-import {MatSelectModule} from "@angular/material/select";
+import { MatSelectModule } from "@angular/material/select";
+import { MatDatepickerModule, MatNativeDateModule } from '@angular/material';
+import { MatRadioModule } from '@angular/material/radio';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -54,6 +57,10 @@ import {MatSelectModule} from "@angular/material/select";
     MatMenuModule,
     LayoutModule,
     MatOptionModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatRadioModule,
+    FormsModule,
     MatSelectModule
   ],
   providers: [],
