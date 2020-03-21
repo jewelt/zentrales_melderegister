@@ -34,8 +34,7 @@ export class TestListComponent implements OnInit {
   }
 
   delete(testToDelete: TestPatientTestResultDTO) {
-    this.testResultControllerService.deleteTestResultUsingDELETE(1).subscribe(() => {
-      this.testControllerService.deleteTestUsingDELETE(1).subscribe(() => {
+      this.testControllerService.deleteTestUsingDELETE(testToDelete.id).subscribe(() => {
         this.data = this.data.filter(test => test.id !== testToDelete.id);
         this.matSnackBar.open('Test gelöscht.', 'OK', {
           duration: 3000
@@ -45,10 +44,5 @@ export class TestListComponent implements OnInit {
           duration: 3000
         });
       });
-    }, error => {
-      this.matSnackBar.open('Test konnte nicht gelöscht werden.', 'OK', {
-        duration: 3000
-      });
-    });
   }
 }
