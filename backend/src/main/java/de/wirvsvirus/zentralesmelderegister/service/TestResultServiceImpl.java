@@ -69,7 +69,7 @@ public class TestResultServiceImpl implements TestResultService {
             log.warn(
                     "Failure while update test resilt with id " + testResultDTO.getId());
             throw new InternalServerErrorException(
-                    "Could not tariff test result with id " + testResultDTO.getId());
+                    "Could not test result with id " + testResultDTO.getId());
         }
     }
 }

@@ -5,7 +5,7 @@ package de.wirvsvirus.zentralesmelderegister.model.jooq;
 
 
 import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.City;
-import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.County;
+import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.Country;
 import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.Doctor;
 import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.DoctorPatient;
 import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.FlywaySchemaHistory;
@@ -37,9 +37,9 @@ public class Tables {
     public static final City CITY = de.wirvsvirus.zentralesmelderegister.model.jooq.tables.City.CITY;
 
     /**
-     * The table <code>public.county</code>.
+     * The table <code>public.country</code>.
      */
-    public static final County COUNTY = de.wirvsvirus.zentralesmelderegister.model.jooq.tables.County.COUNTY;
+    public static final Country COUNTRY = de.wirvsvirus.zentralesmelderegister.model.jooq.tables.Country.COUNTRY;
 
     /**
      * The table <code>public.doctor</code>.

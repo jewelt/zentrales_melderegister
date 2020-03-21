@@ -5,7 +5,7 @@ package de.wirvsvirus.zentralesmelderegister.model.jooq;
 
 
 import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.City;
-import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.County;
+import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.Country;
 import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.Doctor;
 import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.DoctorPatient;
 import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.FlywaySchemaHistory;
@@ -67,8 +67,8 @@ public class Indexes {
     private static class Indexes0 {
         public static Index CITY_ID_UINDEX = Internal.createIndex("city_id_uindex", City.CITY, new OrderField[] { City.CITY.ID }, true);
         public static Index CITY_PK = Internal.createIndex("city_pk", City.CITY, new OrderField[] { City.CITY.ID }, true);
-        public static Index COUNTY_ID_UINDEX = Internal.createIndex("county_id_uindex", County.COUNTY, new OrderField[] { County.COUNTY.ID }, true);
-        public static Index COUNTY_PK = Internal.createIndex("county_pk", County.COUNTY, new OrderField[] { County.COUNTY.ID }, true);
+        public static Index COUNTY_ID_UINDEX = Internal.createIndex("county_id_uindex", Country.COUNTRY, new OrderField[] { Country.COUNTRY.ID }, true);
+        public static Index COUNTY_PK = Internal.createIndex("county_pk", Country.COUNTRY, new OrderField[] { Country.COUNTRY.ID }, true);
         public static Index DOCTOR_ID_UINDEX = Internal.createIndex("doctor_id_uindex", Doctor.DOCTOR, new OrderField[] { Doctor.DOCTOR.ID }, true);
         public static Index DOCTOR_PK = Internal.createIndex("doctor_pk", Doctor.DOCTOR, new OrderField[] { Doctor.DOCTOR.ID }, true);
         public static Index DOCTOR_PATIENT_ID_UINDEX = Internal.createIndex("doctor_patient_id_uindex", DoctorPatient.DOCTOR_PATIENT, new OrderField[] { DoctorPatient.DOCTOR_PATIENT.ID }, true);

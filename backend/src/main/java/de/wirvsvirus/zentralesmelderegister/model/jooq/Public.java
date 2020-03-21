@@ -5,7 +5,7 @@ package de.wirvsvirus.zentralesmelderegister.model.jooq;
 
 
 import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.City;
-import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.County;
+import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.Country;
 import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.Doctor;
 import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.DoctorPatient;
 import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.FlywaySchemaHistory;
@@ -40,7 +40,7 @@ import org.jooq.impl.SchemaImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Public extends SchemaImpl {
 
-    private static final long serialVersionUID = 1882878938;
+    private static final long serialVersionUID = -1936062892;
 
     /**
      * The reference instance of <code>public</code>
@@ -53,9 +53,9 @@ public class Public extends SchemaImpl {
     public final City CITY = de.wirvsvirus.zentralesmelderegister.model.jooq.tables.City.CITY;
 
     /**
-     * The table <code>public.county</code>.
+     * The table <code>public.country</code>.
      */
-    public final County COUNTY = de.wirvsvirus.zentralesmelderegister.model.jooq.tables.County.COUNTY;
+    public final Country COUNTRY = de.wirvsvirus.zentralesmelderegister.model.jooq.tables.Country.COUNTRY;
 
     /**
      * The table <code>public.doctor</code>.
@@ -143,7 +143,7 @@ public class Public extends SchemaImpl {
     private final List<Table<?>> getTables0() {
         return Arrays.<Table<?>>asList(
             City.CITY,
-            County.COUNTY,
+            Country.COUNTRY,
             Doctor.DOCTOR,
             DoctorPatient.DOCTOR_PATIENT,
             FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY,

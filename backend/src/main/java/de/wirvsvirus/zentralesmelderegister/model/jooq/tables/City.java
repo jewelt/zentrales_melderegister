@@ -42,7 +42,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class City extends TableImpl<CityRecord> {
 
-    private static final long serialVersionUID = -512725467;
+    private static final long serialVersionUID = 269082457;
 
     /**
      * The reference instance of <code>public.city</code>
@@ -163,8 +163,8 @@ public class City extends TableImpl<CityRecord> {
         return Arrays.<ForeignKey<CityRecord, ?>>asList(Keys.CITY__CITY_COUNTY_ID_FK);
     }
 
-    public County county() {
-        return new County(this, Keys.CITY__CITY_COUNTY_ID_FK);
+    public Country country() {
+        return new Country(this, Keys.CITY__CITY_COUNTY_ID_FK);
     }
 
     /**

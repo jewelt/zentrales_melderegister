@@ -5,7 +5,7 @@ package de.wirvsvirus.zentralesmelderegister.model.jooq;
 
 
 import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.City;
-import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.County;
+import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.Country;
 import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.Doctor;
 import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.DoctorPatient;
 import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.FlywaySchemaHistory;
@@ -15,7 +15,7 @@ import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.Test;
 import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.TestResult;
 import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.UserAccount;
 import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.records.CityRecord;
-import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.records.CountyRecord;
+import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.records.CountryRecord;
 import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.records.DoctorPatientRecord;
 import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.records.DoctorRecord;
 import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.records.FlywaySchemaHistoryRecord;
@@ -52,7 +52,7 @@ public class Keys {
     // -------------------------------------------------------------------------
 
     public static final Identity<CityRecord, Long> IDENTITY_CITY = Identities0.IDENTITY_CITY;
-    public static final Identity<CountyRecord, Long> IDENTITY_COUNTY = Identities0.IDENTITY_COUNTY;
+    public static final Identity<CountryRecord, Long> IDENTITY_COUNTRY = Identities0.IDENTITY_COUNTRY;
     public static final Identity<DoctorRecord, Long> IDENTITY_DOCTOR = Identities0.IDENTITY_DOCTOR;
     public static final Identity<DoctorPatientRecord, Long> IDENTITY_DOCTOR_PATIENT = Identities0.IDENTITY_DOCTOR_PATIENT;
     public static final Identity<PatientRecord, Long> IDENTITY_PATIENT = Identities0.IDENTITY_PATIENT;
@@ -66,7 +66,7 @@ public class Keys {
     // -------------------------------------------------------------------------
 
     public static final UniqueKey<CityRecord> CITY_PK = UniqueKeys0.CITY_PK;
-    public static final UniqueKey<CountyRecord> COUNTY_PK = UniqueKeys0.COUNTY_PK;
+    public static final UniqueKey<CountryRecord> COUNTY_PK = UniqueKeys0.COUNTY_PK;
     public static final UniqueKey<DoctorRecord> DOCTOR_PK = UniqueKeys0.DOCTOR_PK;
     public static final UniqueKey<DoctorPatientRecord> DOCTOR_PATIENT_PK = UniqueKeys0.DOCTOR_PATIENT_PK;
     public static final UniqueKey<FlywaySchemaHistoryRecord> FLYWAY_SCHEMA_HISTORY_PK = UniqueKeys0.FLYWAY_SCHEMA_HISTORY_PK;
@@ -80,8 +80,8 @@ public class Keys {
     // FOREIGN KEY definitions
     // -------------------------------------------------------------------------
 
-    public static final ForeignKey<CityRecord, CountyRecord> CITY__CITY_COUNTY_ID_FK = ForeignKeys0.CITY__CITY_COUNTY_ID_FK;
-    public static final ForeignKey<CountyRecord, StateRecord> COUNTY__COUNTY_STATE_ID_FK = ForeignKeys0.COUNTY__COUNTY_STATE_ID_FK;
+    public static final ForeignKey<CityRecord, CountryRecord> CITY__CITY_COUNTY_ID_FK = ForeignKeys0.CITY__CITY_COUNTY_ID_FK;
+    public static final ForeignKey<CountryRecord, StateRecord> COUNTRY__COUNTY_STATE_ID_FK = ForeignKeys0.COUNTRY__COUNTY_STATE_ID_FK;
     public static final ForeignKey<DoctorPatientRecord, PatientRecord> DOCTOR_PATIENT__DOCTOR_PATIENT_PATIENT_ID_FK = ForeignKeys0.DOCTOR_PATIENT__DOCTOR_PATIENT_PATIENT_ID_FK;
     public static final ForeignKey<DoctorPatientRecord, DoctorRecord> DOCTOR_PATIENT__DOCTOR_PATIENT_DOCTOR_ID_FK = ForeignKeys0.DOCTOR_PATIENT__DOCTOR_PATIENT_DOCTOR_ID_FK;
     public static final ForeignKey<PatientRecord, CityRecord> PATIENT__PATIENT_CITY_ID_FK = ForeignKeys0.PATIENT__PATIENT_CITY_ID_FK;
@@ -94,7 +94,7 @@ public class Keys {
 
     private static class Identities0 {
         public static Identity<CityRecord, Long> IDENTITY_CITY = Internal.createIdentity(City.CITY, City.CITY.ID);
-        public static Identity<CountyRecord, Long> IDENTITY_COUNTY = Internal.createIdentity(County.COUNTY, County.COUNTY.ID);
+        public static Identity<CountryRecord, Long> IDENTITY_COUNTRY = Internal.createIdentity(Country.COUNTRY, Country.COUNTRY.ID);
         public static Identity<DoctorRecord, Long> IDENTITY_DOCTOR = Internal.createIdentity(Doctor.DOCTOR, Doctor.DOCTOR.ID);
         public static Identity<DoctorPatientRecord, Long> IDENTITY_DOCTOR_PATIENT = Internal.createIdentity(DoctorPatient.DOCTOR_PATIENT, DoctorPatient.DOCTOR_PATIENT.ID);
         public static Identity<PatientRecord, Long> IDENTITY_PATIENT = Internal.createIdentity(Patient.PATIENT, Patient.PATIENT.ID);
@@ -106,7 +106,7 @@ public class Keys {
 
     private static class UniqueKeys0 {
         public static final UniqueKey<CityRecord> CITY_PK = Internal.createUniqueKey(City.CITY, "city_pk", City.CITY.ID);
-        public static final UniqueKey<CountyRecord> COUNTY_PK = Internal.createUniqueKey(County.COUNTY, "county_pk", County.COUNTY.ID);
+        public static final UniqueKey<CountryRecord> COUNTY_PK = Internal.createUniqueKey(Country.COUNTRY, "county_pk", Country.COUNTRY.ID);
         public static final UniqueKey<DoctorRecord> DOCTOR_PK = Internal.createUniqueKey(Doctor.DOCTOR, "doctor_pk", Doctor.DOCTOR.ID);
         public static final UniqueKey<DoctorPatientRecord> DOCTOR_PATIENT_PK = Internal.createUniqueKey(DoctorPatient.DOCTOR_PATIENT, "doctor_patient_pk", DoctorPatient.DOCTOR_PATIENT.ID);
         public static final UniqueKey<FlywaySchemaHistoryRecord> FLYWAY_SCHEMA_HISTORY_PK = Internal.createUniqueKey(FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY, "flyway_schema_history_pk", FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY.INSTALLED_RANK);
@@ -118,8 +118,8 @@ public class Keys {
     }
 
     private static class ForeignKeys0 {
-        public static final ForeignKey<CityRecord, CountyRecord> CITY__CITY_COUNTY_ID_FK = Internal.createForeignKey(de.wirvsvirus.zentralesmelderegister.model.jooq.Keys.COUNTY_PK, City.CITY, "city__city_county_id_fk", City.CITY.COUNTRY_ID);
-        public static final ForeignKey<CountyRecord, StateRecord> COUNTY__COUNTY_STATE_ID_FK = Internal.createForeignKey(de.wirvsvirus.zentralesmelderegister.model.jooq.Keys.DISTRICT_PK, County.COUNTY, "county__county_state_id_fk", County.COUNTY.STATE_ID);
+        public static final ForeignKey<CityRecord, CountryRecord> CITY__CITY_COUNTY_ID_FK = Internal.createForeignKey(de.wirvsvirus.zentralesmelderegister.model.jooq.Keys.COUNTY_PK, City.CITY, "city__city_county_id_fk", City.CITY.COUNTRY_ID);
+        public static final ForeignKey<CountryRecord, StateRecord> COUNTRY__COUNTY_STATE_ID_FK = Internal.createForeignKey(de.wirvsvirus.zentralesmelderegister.model.jooq.Keys.DISTRICT_PK, Country.COUNTRY, "country__county_state_id_fk", Country.COUNTRY.STATE_ID);
         public static final ForeignKey<DoctorPatientRecord, PatientRecord> DOCTOR_PATIENT__DOCTOR_PATIENT_PATIENT_ID_FK = Internal.createForeignKey(de.wirvsvirus.zentralesmelderegister.model.jooq.Keys.PATIENT_PK, DoctorPatient.DOCTOR_PATIENT, "doctor_patient__doctor_patient_patient_id_fk", DoctorPatient.DOCTOR_PATIENT.PATIENT_ID);
         public static final ForeignKey<DoctorPatientRecord, DoctorRecord> DOCTOR_PATIENT__DOCTOR_PATIENT_DOCTOR_ID_FK = Internal.createForeignKey(de.wirvsvirus.zentralesmelderegister.model.jooq.Keys.DOCTOR_PK, DoctorPatient.DOCTOR_PATIENT, "doctor_patient__doctor_patient_doctor_id_fk", DoctorPatient.DOCTOR_PATIENT.DOCTOR_ID);
         public static final ForeignKey<PatientRecord, CityRecord> PATIENT__PATIENT_CITY_ID_FK = Internal.createForeignKey(de.wirvsvirus.zentralesmelderegister.model.jooq.Keys.CITY_PK, Patient.PATIENT, "patient__patient_city_id_fk", Patient.PATIENT.CITY_ID);
