@@ -1,25 +1,21 @@
 package de.wirvsvirus.zentralesmelderegister.service;
 
-import de.wirvsvirus.zentralesmelderegister.model.CityDTO;
 import de.wirvsvirus.zentralesmelderegister.model.TestDTO;
 import de.wirvsvirus.zentralesmelderegister.model.TestPatientTestResultDTO;
-import de.wirvsvirus.zentralesmelderegister.model.TestResultDTO;
 import de.wirvsvirus.zentralesmelderegister.model.jooq.Tables;
-import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.records.CityRecord;
 import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.records.TestRecord;
 import de.wirvsvirus.zentralesmelderegister.web.errors.InternalServerErrorException;
 import de.wirvsvirus.zentralesmelderegister.web.errors.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jooq.DSLContext;
-import org.jooq.Table;
-import static org.jooq.impl.DSL.*;
 import org.springframework.stereotype.Service;
-import sun.tools.jconsole.Tab;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static org.jooq.impl.DSL.select;
 
 @Service
 @AllArgsConstructor
