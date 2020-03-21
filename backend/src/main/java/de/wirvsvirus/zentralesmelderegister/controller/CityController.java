@@ -24,13 +24,13 @@ public class CityController {
     }
 
     @PostMapping("/city")
-    public CityDTO createCity(CityDTO cityDTO) {
+    public CityDTO createCity(@RequestBody CityDTO cityDTO) {
         log.debug("request to create a city: " + cityDTO.toString());
         return this.cityService.createCityDTO(cityDTO);
     }
 
     @PutMapping("/city")
-    public void updateCity(CityDTO cityDTO) {
+    public void updateCity(@RequestBody CityDTO cityDTO) {
         log.debug("request to update a city: " + cityDTO.toString());
         this.cityService.updateCity(cityDTO);
     }

@@ -58,15 +58,15 @@ public class SwaggerDocumentationConfig {
                 .paths(PathSelectors.any())
                 .build()
                 .pathMapping("/")
-//                .directModelSubstitute(LocalDate.class, String.class)
-//                .directModelSubstitute(LocalDateTime.class, String.class)
-//                .directModelSubstitute(ZonedDateTime.class, String.class)
-//                .directModelSubstitute(OffsetDateTime.class, String.class)
+                .directModelSubstitute(LocalDate.class, String.class)
+                .directModelSubstitute(LocalDateTime.class, String.class)
+                .directModelSubstitute(ZonedDateTime.class, String.class)
+                .directModelSubstitute(OffsetDateTime.class, String.class)
                 .genericModelSubstitutes(ResponseEntity.class)
-//                .alternateTypeRules(
-//                        newRule(typeResolver.resolve(DeferredResult.class,
-//                                typeResolver.resolve(ResponseEntity.class, WildcardType.class)),
-//                                typeResolver.resolve(WildcardType.class)))
+                .alternateTypeRules(
+                        newRule(typeResolver.resolve(DeferredResult.class,
+                                typeResolver.resolve(ResponseEntity.class, WildcardType.class)),
+                                typeResolver.resolve(WildcardType.class)))
                 .useDefaultResponseMessages(true)
                 .securityContexts(Lists.newArrayList(securityContext()))
                 .securitySchemes(Lists.newArrayList(apiKey()))

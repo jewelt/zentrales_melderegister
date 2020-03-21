@@ -25,13 +25,13 @@ public class TestResultController {
     }
 
     @PostMapping("/test-result")
-    public TestResultDTO createTestResult(TestResultDTO testResultDTO) {
+    public TestResultDTO createTestResult(@RequestBody TestResultDTO testResultDTO) {
         log.debug("request to create a test_result: " + testResultDTO.toString());
         return this.testResultService.createTestResult(testResultDTO);
     }
 
     @PutMapping("/test-result")
-    public void updateTestResult(TestResultDTO testResultDTO) {
+    public void updateTestResult(@RequestBody TestResultDTO testResultDTO) {
         log.debug("request to update a test_result: " + testResultDTO.toString());
         this.testResultService.updateTestResult(testResultDTO);
     }
