@@ -16,6 +16,10 @@ import org.jooq.DSLContext;
 import org.jooq.Table;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,7 +36,7 @@ public class PatientServiceImpl implements PatientService {
 
         log.debug("Insert patient: " + patientDTO.toString());
         return this.dslContext.insertInto(Tables.PATIENT)
-                .set(Tables.PATIENT.BIRTHDAY, patientDTO.getBirthday())
+                .set(Tables.PATIENT.BIRTHDAY, OffsetDateTime.of(patientDTO.getBirthday(), LocalTime.MIDNIGHT, ZoneOffset.UTC))
                 .set(Tables.PATIENT.CITY_ID, patientDTO.getCityId())
                 .set(Tables.PATIENT.USER_ACCOUNT_ID, userAccountService.getCurrentUserId())
                 .returning().fetchOptional().map(PatientDTO::new)
@@ -72,7 +76,7 @@ public class PatientServiceImpl implements PatientService {
     public void updatePatientDTO(PatientDTO patientDTO) {
         log.debug("Update patient: " + patientDTO.toString());
         final int affectedRows = this.dslContext.update(Tables.PATIENT)
-                .set(Tables.PATIENT.BIRTHDAY, patientDTO.getBirthday())
+                .set(Tables.PATIENT.BIRTHDAY, OffsetDateTime.of(patientDTO.getBirthday(), LocalTime.MIDNIGHT, ZoneOffset.UTC))
                 .set(Tables.PATIENT.CITY_ID, patientDTO.getCityId())
                 .where(Tables.PATIENT.ID.eq(patientDTO.getId()))
                 .and(Tables.PATIENT.USER_ACCOUNT_ID.eq(userAccountService.getCurrentUserId()))

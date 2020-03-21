@@ -4,6 +4,7 @@ import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.records.TestRecord
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.OffsetDateTime;
 
@@ -12,8 +13,12 @@ import java.time.OffsetDateTime;
 @NoArgsConstructor
 public class TestDTO {
     private Long id;
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private OffsetDateTime entryDate;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private OffsetDateTime testDate;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private OffsetDateTime resultDate;
     private Long testResultId;
     private Long patientId;
