@@ -15,6 +15,7 @@ import org.jooq.DSLContext;
 import org.jooq.Table;
 import static org.jooq.impl.DSL.*;
 import org.springframework.stereotype.Service;
+import sun.tools.jconsole.Tab;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -112,6 +113,8 @@ public class TestServiceImpl implements TestService {
     public List<TestDTO> getAllTests() {
         log.debug("get all tests");
         return this.dslContext.select().from(Tables.TEST)
+                .join(Tables.PATIENT)
+                .on(Tables.PATIENT.ID.eq(Tables.TEST.PATIENT_ID))
                 .where(Tables.TEST.PATIENT_ID.eq(Tables.PATIENT.ID))
                 .and(Tables.PATIENT.USER_ACCOUNT_ID.eq(userAccountService.getCurrentUserId()))
                 .fetchInto(TestRecord.class)
