@@ -11,10 +11,10 @@
  */
 
 export interface TestDTO { 
-    entryDate?: Date;
+    entryDate?: string;
     id?: number;
     patientId?: number;
-    resultDate?: Date;
-    testDate?: Date;
+    resultDate?: string;
+    testDate?: string;
     testResultId?: number;
 }

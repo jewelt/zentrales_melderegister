@@ -1,11 +1,8 @@
 package de.wirvsvirus.zentralesmelderegister.service;
 
-import de.wirvsvirus.zentralesmelderegister.model.CityDTO;
 import de.wirvsvirus.zentralesmelderegister.model.TestDTO;
 import de.wirvsvirus.zentralesmelderegister.model.TestPatientTestResultDTO;
-import de.wirvsvirus.zentralesmelderegister.model.TestResultDTO;
 import de.wirvsvirus.zentralesmelderegister.model.jooq.Tables;
-import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.records.CityRecord;
 import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.records.TestRecord;
 import de.wirvsvirus.zentralesmelderegister.web.errors.InternalServerErrorException;
 import de.wirvsvirus.zentralesmelderegister.web.errors.ResourceNotFoundException;
@@ -18,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.jooq.impl.DSL.select;
+
 @Service
 @AllArgsConstructor
 @Slf4j
@@ -26,6 +25,7 @@ public class TestServiceImpl implements TestService {
     private final DSLContext dslContext;
     private final PatientService patientService;
     private final TestResultService testResultService;
+    private final UserAccountService userAccountService;
 
     @Override
     public TestDTO createTestDTO(TestDTO testDTO) {
@@ -45,10 +45,15 @@ public class TestServiceImpl implements TestService {
     @Override
     public TestDTO getTestDTO(Long testId) {
         log.debug("Get test  with id " + testId);
-        return this.dslContext.selectFrom(Tables.TEST)
+        return this.dslContext.select().from(Tables.TEST)
+                .join(Tables.PATIENT)
+                .on(Tables.PATIENT.ID.eq(Tables.TEST.PATIENT_ID))
                 .where(Tables.TEST.ID.eq(testId))
-                .fetchOptional()
+                .and(Tables.PATIENT.USER_ACCOUNT_ID.eq(userAccountService.getCurrentUserId()))
+                .fetchInto(TestRecord.class)
+                .stream()
                 .map(TestDTO::new)
+                .findFirst()
                 .orElseThrow(() -> new ResourceNotFoundException("Test Test with id " + testId + " was not found."));
     }
 
@@ -57,6 +62,11 @@ public class TestServiceImpl implements TestService {
         log.debug("Delete test  with id " + testId);
         final int affectedRows = this.dslContext.delete(Tables.TEST)
                 .where(Tables.TEST.ID.eq(testId))
+                .and(Tables.TEST.PATIENT_ID.in(
+                        select(Tables.PATIENT.ID)
+                        .from(Tables.PATIENT)
+                        .where(Tables.PATIENT.USER_ACCOUNT_ID.eq(userAccountService.getCurrentUserId()))
+                ))
                 .execute();
         if (affectedRows == 1) {
             log.debug("Successful delete. 1 row affected");
@@ -78,6 +88,11 @@ public class TestServiceImpl implements TestService {
                 .set(Tables.TEST.RESULT_DATE, testDTO.getResultDate())
                 .set(Tables.TEST.TEST_DATE, testDTO.getTestDate())
                 .where(Tables.TEST.ID.eq(testDTO.getId()))
+                .and(Tables.TEST.PATIENT_ID.in(
+                        select(Tables.PATIENT.ID)
+                        .from(Tables.PATIENT)
+                        .where(Tables.PATIENT.USER_ACCOUNT_ID.eq(userAccountService.getCurrentUserId()))
+                ))
                 .execute();
 
         if (affectedRows == 1) {
@@ -94,6 +109,10 @@ public class TestServiceImpl implements TestService {
     public List<TestDTO> getAllTests() {
         log.debug("get all tests");
         return this.dslContext.select().from(Tables.TEST)
+                .join(Tables.PATIENT)
+                .on(Tables.PATIENT.ID.eq(Tables.TEST.PATIENT_ID))
+                .where(Tables.TEST.PATIENT_ID.eq(Tables.PATIENT.ID))
+                .and(Tables.PATIENT.USER_ACCOUNT_ID.eq(userAccountService.getCurrentUserId()))
                 .fetchInto(TestRecord.class)
                 .stream().map(TestDTO::new)
                 .collect(Collectors.toList());

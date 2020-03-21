@@ -1,28 +1,50 @@
 <div class="erfassung-form-container">
-  <form [formGroup]="formGroup" class="erfassung-form mat-elevation-z2">
-    <h3>Erfassung</h3>
+  <form [formGroup]="formGroup" class="erfassung-form mat-elevation-z2" (ngSubmit)="onSave()">
+    <h2>Erfassung</h2>
     <mat-form-field>
-      <mat-label>Bundesland</mat-label>
-      <mat-select formControlName="state">
-        <mat-option *ngFor="let state of states" [value]="state">
-          {{state}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>Landkreis</mat-label>
-      <mat-select formControlName="state">
-        <mat-option *ngFor="let country of countries" [value]="country">
-          {{country}}
-        </mat-option>
-      </mat-select>
+      <mat-label>Geburtstag</mat-label>
+      <input matInput [matDatepicker]="myDatepicker" formControlName="birthdate">
+      <mat-datepicker-toggle matSuffix [for]="myDatepicker"></mat-datepicker-toggle>
+      <mat-datepicker #myDatepicker></mat-datepicker>
     </mat-form-field>
     <mat-form-field>
       <mat-label>Stadt</mat-label>
-      <input matInput placeholder="Stadt" formControlName="city">
+      <mat-select formControlName="city">
+        <mat-option *ngFor="let city of cities" [value]="city">
+          {{city.name}}
+        </mat-option>
+      </mat-select>
     </mat-form-field>
-    <button mat-button>
-      <mat-icon>send</mat-icon>
+    <mat-form-field>
+      <mat-label>Name Arzt</mat-label>
+      <input matInput placeholder="Name Arzt" formControlName="doctor">
+    </mat-form-field>
+    <div style="display: flex;">
+      <mat-form-field style="width: 120px">
+        <mat-label>Testzeit</mat-label>
+        <input matInput [matDatepicker]="myDatepicker1" formControlName="testdate">
+        <mat-datepicker-toggle matSuffix [for]="myDatepicker1"></mat-datepicker-toggle>
+        <mat-datepicker #myDatepicker1></mat-datepicker>
+      </mat-form-field>
+      <app-timepicker style="margin-left: 5px" [control]="formGroup.get('testtime')"></app-timepicker>
+    </div>
+    <div style="display: flex;">
+      <mat-form-field style="width: 120px">
+        <mat-label>Ergebniszeit</mat-label>
+        <input matInput [matDatepicker]="myDatepicker2" formControlName="resultdate">
+        <mat-datepicker-toggle matSuffix [for]="myDatepicker2"></mat-datepicker-toggle>
+        <mat-datepicker #myDatepicker2></mat-datepicker>
+      </mat-form-field>
+      <app-timepicker style="margin-left: 5px" [control]="formGroup.get('resulttime')"></app-timepicker>
+    </div>
+    <mat-radio-group class="tp-radio-group" formControlName="testresult">
+      <mat-radio-button class="tp-radio-button"
+                        *ngFor="let testResult of testResults" [value]="testResult">
+        {{testResult.description}}
+      </mat-radio-button>
+    </mat-radio-group>
+    <button mat-button style="margin-top: 15px">
+      <mat-icon style="margin-right: 10px">send</mat-icon>
       <span>Einsenden</span>
     </button>
   </form>

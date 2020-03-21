@@ -4,7 +4,9 @@ import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.records.PatientRec
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 
@@ -14,13 +16,15 @@ import java.time.ZonedDateTime;
 public class PatientDTO {
 
     private Long id;
-    private OffsetDateTime birthday;
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    private LocalDate birthday;
     private Long cityId;
 
     public PatientDTO(PatientRecord patientRecord) {
         this.id = patientRecord.getId();
         if (patientRecord.getBirthday() != null) {
-            this.birthday = patientRecord.getBirthday();
+            this.birthday = patientRecord.getBirthday().toLocalDate();
         }
         this.cityId = patientRecord.getCityId();
     }

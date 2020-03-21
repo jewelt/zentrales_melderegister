@@ -13,12 +13,12 @@ import { PatientDTO } from './patientDTO';
 import { TestResultDTO } from './testResultDTO';
 
 export interface TestPatientTestResultDTO { 
-    entryDate?: Date;
+    entryDate?: string;
     id?: number;
     patientDTO?: PatientDTO;
     patientId?: number;
-    resultDate?: Date;
-    testDate?: Date;
+    resultDate?: string;
+    testDate?: string;
     testResultDTO?: TestResultDTO;
     testResultId?: number;
 }

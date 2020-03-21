@@ -1,5 +1,5 @@
 import {BrowserModule} from '@angular/platform-browser';
-import {NgModule} from '@angular/core';
+import {LOCALE_ID, NgModule} from '@angular/core';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
@@ -12,7 +12,7 @@ import {MatListModule} from '@angular/material/list';
 import {MatButtonModule} from '@angular/material/button';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatCardModule} from '@angular/material/card';
-import {ReactiveFormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatInputModule} from '@angular/material/input';
@@ -21,23 +21,26 @@ import {DashboardComponent} from './dashboard/dashboard.component';
 import {MatGridListModule} from '@angular/material/grid-list';
 import {MatMenuModule} from '@angular/material/menu';
 import {LayoutModule} from '@angular/cdk/layout';
-import {TestComponent} from './test/test.component';
+import {MatDatepickerModule, MatNativeDateModule} from '@angular/material';
+import {MatRadioModule} from '@angular/material/radio';
 import {ErfassungComponent} from './erfassung/erfassung.component';
-import {MatOptionModule} from '@angular/material/core';
+import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatOptionModule} from '@angular/material/core';
 import {MatSelectModule} from '@angular/material/select';
 import {TestListComponent} from './test-list/test-list.component';
 import {SimplemattableModule} from 'simplemattable';
 import {ApiModule, BASE_PATH} from './clients/melderegister';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {MatMomentDateModule, MomentDateAdapter} from '@angular/material-moment-adapter';
+import { TimepickerComponent } from './timepicker/timepicker.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavComponent,
     DashboardComponent,
-    TestComponent,
     ErfassungComponent,
-    TestListComponent
+    TestListComponent,
+    TimepickerComponent
   ],
   imports: [
     BrowserModule,
@@ -50,6 +53,7 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
     MatButtonModule,
     MatProgressSpinnerModule,
     MatCardModule,
+    MatMomentDateModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatCheckboxModule,
@@ -59,6 +63,10 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
     MatMenuModule,
     LayoutModule,
     MatOptionModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatRadioModule,
+    FormsModule,
     MatSelectModule,
     SimplemattableModule,
     MatSnackBarModule,
@@ -68,6 +76,25 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
     {
       provide: BASE_PATH,
       useValue: 'http://localhost:4200/api'
+    },
+    {
+      provide: LOCALE_ID,
+      useValue: 'de'
+    },
+    {provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE]},
+    {
+      provide: MAT_DATE_FORMATS,
+      useValue: {
+        parse: {
+          dateInput: ['DD.MM.YYYY', 'DDMMYYYY', 'd.m.yy', 'dmyy'],
+        },
+        display: {
+          dateInput: 'DD.MM.YYYY',
+          monthYearLabel: 'MMM YYYY',
+          dateA11yLabel: 'LL',
+          monthYearA11yLabel: 'MMMM YYYY',
+        },
+      },
     },
   ],
   bootstrap: [AppComponent]

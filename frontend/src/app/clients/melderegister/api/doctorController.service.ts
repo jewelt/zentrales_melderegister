@@ -59,24 +59,17 @@ export class DoctorControllerService {
     /**
      * createDoctor
      * 
-     * @param id 
-     * @param name 
+     * @param body doctorDTO
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createDoctorUsingPOST(id?: number, name?: string, observe?: 'body', reportProgress?: boolean): Observable<DoctorDTO>;
-    public createDoctorUsingPOST(id?: number, name?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<DoctorDTO>>;
-    public createDoctorUsingPOST(id?: number, name?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<DoctorDTO>>;
-    public createDoctorUsingPOST(id?: number, name?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public createDoctorUsingPOST(body: DoctorDTO, observe?: 'body', reportProgress?: boolean): Observable<DoctorDTO>;
+    public createDoctorUsingPOST(body: DoctorDTO, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<DoctorDTO>>;
+    public createDoctorUsingPOST(body: DoctorDTO, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<DoctorDTO>>;
+    public createDoctorUsingPOST(body: DoctorDTO, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
-
-
-        let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
-        if (id !== undefined && id !== null) {
-            queryParameters = queryParameters.set('id', <any>id);
-        }
-        if (name !== undefined && name !== null) {
-            queryParameters = queryParameters.set('name', <any>name);
+        if (body === null || body === undefined) {
+            throw new Error('Required parameter body was null or undefined when calling createDoctorUsingPOST.');
         }
 
         let headers = this.defaultHeaders;
@@ -97,11 +90,16 @@ export class DoctorControllerService {
 
         // to determine the Content-Type header
         const consumes: string[] = [
+            'application/json'
         ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected != undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
 
         return this.httpClient.request<DoctorDTO>('post',`${this.basePath}/v1/doctor`,
             {
-                params: queryParameters,
+                body: body,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -291,24 +289,17 @@ export class DoctorControllerService {
     /**
      * updateDoctor
      * 
-     * @param id 
-     * @param name 
+     * @param body doctorDTO
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public updateDoctorUsingPUT(id?: number, name?: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public updateDoctorUsingPUT(id?: number, name?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public updateDoctorUsingPUT(id?: number, name?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public updateDoctorUsingPUT(id?: number, name?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public updateDoctorUsingPUT(body: DoctorDTO, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public updateDoctorUsingPUT(body: DoctorDTO, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public updateDoctorUsingPUT(body: DoctorDTO, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public updateDoctorUsingPUT(body: DoctorDTO, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
-
-
-        let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
-        if (id !== undefined && id !== null) {
-            queryParameters = queryParameters.set('id', <any>id);
-        }
-        if (name !== undefined && name !== null) {
-            queryParameters = queryParameters.set('name', <any>name);
+        if (body === null || body === undefined) {
+            throw new Error('Required parameter body was null or undefined when calling updateDoctorUsingPUT.');
         }
 
         let headers = this.defaultHeaders;
@@ -328,11 +319,16 @@ export class DoctorControllerService {
 
         // to determine the Content-Type header
         const consumes: string[] = [
+            'application/json'
         ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected != undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
 
         return this.httpClient.request<any>('put',`${this.basePath}/v1/doctor`,
             {
-                params: queryParameters,
+                body: body,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
