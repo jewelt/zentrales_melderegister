@@ -68,7 +68,7 @@ public class StatisticsServiceImpl implements StatisticsService {
                     "order by 1 desc;").executeQuery();
 
             while (resultSet.next()) {
-                growthByDates.add(new CountByDay(LocalDate.parse(resultSet.getString(2)), resultSet.getBigDecimal(3)));
+                growthByDates.add(new CountByDay(LocalDate.parse(resultSet.getString(1)), resultSet.getBigDecimal(2)));
             }
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
@@ -93,9 +93,9 @@ public class StatisticsServiceImpl implements StatisticsService {
                     "order by 1 asc;").executeQuery();
             BigDecimal sumCounter = BigDecimal.ZERO;
             while (resultSet.next()) {
-                final BigDecimal growthAtDay = resultSet.getBigDecimal(3);
+                final BigDecimal growthAtDay = resultSet.getBigDecimal(2);
                 sumCounter = sumCounter.add(growthAtDay);
-                growthByDates.add(new CountByDay(LocalDate.parse(resultSet.getString(2)), sumCounter));
+                growthByDates.add(new CountByDay(LocalDate.parse(resultSet.getString(1)), sumCounter));
             }
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
