@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --proxy-config proxy.conf.json",
+    "start": "ng serve --proxy-config proxy.conf.json --poll=1000",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
@@ -26,7 +26,9 @@
     "rxjs": "~6.4.0",
     "simplemattable": "^4.0.1",
     "tslib": "^1.10.0",
-    "zone.js": "~0.9.1"
+    "zone.js": "~0.9.1",
+    "moment": "^2.24.0",
+    "@angular/material-moment-adapter": "^8.2.3"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.803.13",

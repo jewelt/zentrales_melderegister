@@ -11,7 +11,7 @@
  */
 
 export interface PatientDTO { 
-    birthday?: Date;
+    birthday?: string;
     cityId?: number;
     id?: number;
 }

@@ -34,7 +34,7 @@ public class PatientServiceImpl implements PatientService {
     @Override
     public PatientDTO createPatientDTO(PatientDTO patientDTO) {
 
-        log.debug("Insert patient: " + patientDTO.toString());
+        log.info("Insert patient: " + patientDTO.toString());
         return this.dslContext.insertInto(Tables.PATIENT)
                 .set(Tables.PATIENT.BIRTHDAY, OffsetDateTime.of(patientDTO.getBirthday(), LocalTime.MIDNIGHT, ZoneOffset.UTC))
                 .set(Tables.PATIENT.CITY_ID, patientDTO.getCityId())

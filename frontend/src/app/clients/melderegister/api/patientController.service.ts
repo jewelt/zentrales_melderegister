@@ -59,29 +59,17 @@ export class PatientControllerService {
     /**
      * createPatient
      * 
-     * @param birthday 
-     * @param cityId 
-     * @param id 
+     * @param body patientDTO
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createPatientUsingPOST(birthday?: Date, cityId?: number, id?: number, observe?: 'body', reportProgress?: boolean): Observable<PatientDTO>;
-    public createPatientUsingPOST(birthday?: Date, cityId?: number, id?: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<PatientDTO>>;
-    public createPatientUsingPOST(birthday?: Date, cityId?: number, id?: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<PatientDTO>>;
-    public createPatientUsingPOST(birthday?: Date, cityId?: number, id?: number, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public createPatientUsingPOST(body: PatientDTO, observe?: 'body', reportProgress?: boolean): Observable<PatientDTO>;
+    public createPatientUsingPOST(body: PatientDTO, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<PatientDTO>>;
+    public createPatientUsingPOST(body: PatientDTO, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<PatientDTO>>;
+    public createPatientUsingPOST(body: PatientDTO, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
-
-
-
-        let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
-        if (birthday !== undefined && birthday !== null) {
-            queryParameters = queryParameters.set('birthday', <any>birthday.toISOString());
-        }
-        if (cityId !== undefined && cityId !== null) {
-            queryParameters = queryParameters.set('cityId', <any>cityId);
-        }
-        if (id !== undefined && id !== null) {
-            queryParameters = queryParameters.set('id', <any>id);
+        if (body === null || body === undefined) {
+            throw new Error('Required parameter body was null or undefined when calling createPatientUsingPOST.');
         }
 
         let headers = this.defaultHeaders;
@@ -102,11 +90,16 @@ export class PatientControllerService {
 
         // to determine the Content-Type header
         const consumes: string[] = [
+            'application/json'
         ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected != undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
 
         return this.httpClient.request<PatientDTO>('post',`${this.basePath}/v1/patient`,
             {
-                params: queryParameters,
+                body: body,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -352,29 +345,17 @@ export class PatientControllerService {
     /**
      * updatePatient
      * 
-     * @param birthday 
-     * @param cityId 
-     * @param id 
+     * @param body patientDTO
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public updatePatientUsingPUT(birthday?: Date, cityId?: number, id?: number, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public updatePatientUsingPUT(birthday?: Date, cityId?: number, id?: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public updatePatientUsingPUT(birthday?: Date, cityId?: number, id?: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public updatePatientUsingPUT(birthday?: Date, cityId?: number, id?: number, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public updatePatientUsingPUT(body: PatientDTO, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public updatePatientUsingPUT(body: PatientDTO, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public updatePatientUsingPUT(body: PatientDTO, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public updatePatientUsingPUT(body: PatientDTO, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
-
-
-
-        let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
-        if (birthday !== undefined && birthday !== null) {
-            queryParameters = queryParameters.set('birthday', <any>birthday.toISOString());
-        }
-        if (cityId !== undefined && cityId !== null) {
-            queryParameters = queryParameters.set('cityId', <any>cityId);
-        }
-        if (id !== undefined && id !== null) {
-            queryParameters = queryParameters.set('id', <any>id);
+        if (body === null || body === undefined) {
+            throw new Error('Required parameter body was null or undefined when calling updatePatientUsingPUT.');
         }
 
         let headers = this.defaultHeaders;
@@ -394,11 +375,16 @@ export class PatientControllerService {
 
         // to determine the Content-Type header
         const consumes: string[] = [
+            'application/json'
         ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected != undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
 
         return this.httpClient.request<any>('put',`${this.basePath}/v1/patient`,
             {
-                params: queryParameters,
+                body: body,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,

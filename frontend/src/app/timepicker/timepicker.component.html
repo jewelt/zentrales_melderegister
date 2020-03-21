@@ -1,0 +1,9 @@
+<div style="display: flex">
+  <mat-form-field>
+    <input matInput [formControl]="formControlHour" />
+    <span style="margin-right: 4px" matSuffix>:</span>
+  </mat-form-field>
+  <mat-form-field>
+    <input #minuteInput matInput [formControl]="formControlMinute" />
+  </mat-form-field>
+</div>

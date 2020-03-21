@@ -58,39 +58,17 @@ export class CountryControllerService {
     /**
      * createCountry
      * 
-     * @param coordinatesLatitude 
-     * @param coordinatesLongitude 
-     * @param id 
-     * @param name 
-     * @param stateId 
+     * @param body countryDTO
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createCountryUsingPOST(coordinatesLatitude?: number, coordinatesLongitude?: number, id?: number, name?: string, stateId?: number, observe?: 'body', reportProgress?: boolean): Observable<CountryDTO>;
-    public createCountryUsingPOST(coordinatesLatitude?: number, coordinatesLongitude?: number, id?: number, name?: string, stateId?: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<CountryDTO>>;
-    public createCountryUsingPOST(coordinatesLatitude?: number, coordinatesLongitude?: number, id?: number, name?: string, stateId?: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<CountryDTO>>;
-    public createCountryUsingPOST(coordinatesLatitude?: number, coordinatesLongitude?: number, id?: number, name?: string, stateId?: number, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public createCountryUsingPOST(body: CountryDTO, observe?: 'body', reportProgress?: boolean): Observable<CountryDTO>;
+    public createCountryUsingPOST(body: CountryDTO, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<CountryDTO>>;
+    public createCountryUsingPOST(body: CountryDTO, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<CountryDTO>>;
+    public createCountryUsingPOST(body: CountryDTO, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
-
-
-
-
-
-        let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
-        if (coordinatesLatitude !== undefined && coordinatesLatitude !== null) {
-            queryParameters = queryParameters.set('coordinatesLatitude', <any>coordinatesLatitude);
-        }
-        if (coordinatesLongitude !== undefined && coordinatesLongitude !== null) {
-            queryParameters = queryParameters.set('coordinatesLongitude', <any>coordinatesLongitude);
-        }
-        if (id !== undefined && id !== null) {
-            queryParameters = queryParameters.set('id', <any>id);
-        }
-        if (name !== undefined && name !== null) {
-            queryParameters = queryParameters.set('name', <any>name);
-        }
-        if (stateId !== undefined && stateId !== null) {
-            queryParameters = queryParameters.set('stateId', <any>stateId);
+        if (body === null || body === undefined) {
+            throw new Error('Required parameter body was null or undefined when calling createCountryUsingPOST.');
         }
 
         let headers = this.defaultHeaders;
@@ -111,11 +89,16 @@ export class CountryControllerService {
 
         // to determine the Content-Type header
         const consumes: string[] = [
+            'application/json'
         ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected != undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
 
         return this.httpClient.request<CountryDTO>('post',`${this.basePath}/v1/country`,
             {
-                params: queryParameters,
+                body: body,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -305,39 +288,17 @@ export class CountryControllerService {
     /**
      * updateCountry
      * 
-     * @param coordinatesLatitude 
-     * @param coordinatesLongitude 
-     * @param id 
-     * @param name 
-     * @param stateId 
+     * @param body countryDTO
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public updateCountryUsingPUT(coordinatesLatitude?: number, coordinatesLongitude?: number, id?: number, name?: string, stateId?: number, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public updateCountryUsingPUT(coordinatesLatitude?: number, coordinatesLongitude?: number, id?: number, name?: string, stateId?: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public updateCountryUsingPUT(coordinatesLatitude?: number, coordinatesLongitude?: number, id?: number, name?: string, stateId?: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public updateCountryUsingPUT(coordinatesLatitude?: number, coordinatesLongitude?: number, id?: number, name?: string, stateId?: number, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public updateCountryUsingPUT(body: CountryDTO, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public updateCountryUsingPUT(body: CountryDTO, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public updateCountryUsingPUT(body: CountryDTO, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public updateCountryUsingPUT(body: CountryDTO, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
-
-
-
-
-
-        let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
-        if (coordinatesLatitude !== undefined && coordinatesLatitude !== null) {
-            queryParameters = queryParameters.set('coordinatesLatitude', <any>coordinatesLatitude);
-        }
-        if (coordinatesLongitude !== undefined && coordinatesLongitude !== null) {
-            queryParameters = queryParameters.set('coordinatesLongitude', <any>coordinatesLongitude);
-        }
-        if (id !== undefined && id !== null) {
-            queryParameters = queryParameters.set('id', <any>id);
-        }
-        if (name !== undefined && name !== null) {
-            queryParameters = queryParameters.set('name', <any>name);
-        }
-        if (stateId !== undefined && stateId !== null) {
-            queryParameters = queryParameters.set('stateId', <any>stateId);
+        if (body === null || body === undefined) {
+            throw new Error('Required parameter body was null or undefined when calling updateCountryUsingPUT.');
         }
 
         let headers = this.defaultHeaders;
@@ -357,11 +318,16 @@ export class CountryControllerService {
 
         // to determine the Content-Type header
         const consumes: string[] = [
+            'application/json'
         ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected != undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
 
         return this.httpClient.request<any>('put',`${this.basePath}/v1/country`,
             {
-                params: queryParameters,
+                body: body,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,

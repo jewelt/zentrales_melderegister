@@ -59,44 +59,17 @@ export class TestControllerService {
     /**
      * createTest
      * 
-     * @param entryDate 
-     * @param id 
-     * @param patientId 
-     * @param resultDate 
-     * @param testDate 
-     * @param testResultId 
+     * @param body testDTO
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createTestUsingPOST(entryDate?: Date, id?: number, patientId?: number, resultDate?: Date, testDate?: Date, testResultId?: number, observe?: 'body', reportProgress?: boolean): Observable<TestDTO>;
-    public createTestUsingPOST(entryDate?: Date, id?: number, patientId?: number, resultDate?: Date, testDate?: Date, testResultId?: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<TestDTO>>;
-    public createTestUsingPOST(entryDate?: Date, id?: number, patientId?: number, resultDate?: Date, testDate?: Date, testResultId?: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<TestDTO>>;
-    public createTestUsingPOST(entryDate?: Date, id?: number, patientId?: number, resultDate?: Date, testDate?: Date, testResultId?: number, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public createTestUsingPOST(body: TestDTO, observe?: 'body', reportProgress?: boolean): Observable<TestDTO>;
+    public createTestUsingPOST(body: TestDTO, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<TestDTO>>;
+    public createTestUsingPOST(body: TestDTO, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<TestDTO>>;
+    public createTestUsingPOST(body: TestDTO, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
-
-
-
-
-
-
-        let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
-        if (entryDate !== undefined && entryDate !== null) {
-            queryParameters = queryParameters.set('entryDate', <any>entryDate.toISOString());
-        }
-        if (id !== undefined && id !== null) {
-            queryParameters = queryParameters.set('id', <any>id);
-        }
-        if (patientId !== undefined && patientId !== null) {
-            queryParameters = queryParameters.set('patientId', <any>patientId);
-        }
-        if (resultDate !== undefined && resultDate !== null) {
-            queryParameters = queryParameters.set('resultDate', <any>resultDate.toISOString());
-        }
-        if (testDate !== undefined && testDate !== null) {
-            queryParameters = queryParameters.set('testDate', <any>testDate.toISOString());
-        }
-        if (testResultId !== undefined && testResultId !== null) {
-            queryParameters = queryParameters.set('testResultId', <any>testResultId);
+        if (body === null || body === undefined) {
+            throw new Error('Required parameter body was null or undefined when calling createTestUsingPOST.');
         }
 
         let headers = this.defaultHeaders;
@@ -117,11 +90,16 @@ export class TestControllerService {
 
         // to determine the Content-Type header
         const consumes: string[] = [
+            'application/json'
         ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected != undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
 
         return this.httpClient.request<TestDTO>('post',`${this.basePath}/v1/test`,
             {
-                params: queryParameters,
+                body: body,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -306,44 +284,17 @@ export class TestControllerService {
     /**
      * updateTest
      * 
-     * @param entryDate 
-     * @param id 
-     * @param patientId 
-     * @param resultDate 
-     * @param testDate 
-     * @param testResultId 
+     * @param body testDTO
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public updateTestUsingPUT(entryDate?: Date, id?: number, patientId?: number, resultDate?: Date, testDate?: Date, testResultId?: number, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public updateTestUsingPUT(entryDate?: Date, id?: number, patientId?: number, resultDate?: Date, testDate?: Date, testResultId?: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public updateTestUsingPUT(entryDate?: Date, id?: number, patientId?: number, resultDate?: Date, testDate?: Date, testResultId?: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public updateTestUsingPUT(entryDate?: Date, id?: number, patientId?: number, resultDate?: Date, testDate?: Date, testResultId?: number, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public updateTestUsingPUT(body: TestDTO, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public updateTestUsingPUT(body: TestDTO, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public updateTestUsingPUT(body: TestDTO, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public updateTestUsingPUT(body: TestDTO, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
-
-
-
-
-
-
-        let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
-        if (entryDate !== undefined && entryDate !== null) {
-            queryParameters = queryParameters.set('entryDate', <any>entryDate.toISOString());
-        }
-        if (id !== undefined && id !== null) {
-            queryParameters = queryParameters.set('id', <any>id);
-        }
-        if (patientId !== undefined && patientId !== null) {
-            queryParameters = queryParameters.set('patientId', <any>patientId);
-        }
-        if (resultDate !== undefined && resultDate !== null) {
-            queryParameters = queryParameters.set('resultDate', <any>resultDate.toISOString());
-        }
-        if (testDate !== undefined && testDate !== null) {
-            queryParameters = queryParameters.set('testDate', <any>testDate.toISOString());
-        }
-        if (testResultId !== undefined && testResultId !== null) {
-            queryParameters = queryParameters.set('testResultId', <any>testResultId);
+        if (body === null || body === undefined) {
+            throw new Error('Required parameter body was null or undefined when calling updateTestUsingPUT.');
         }
 
         let headers = this.defaultHeaders;
@@ -363,11 +314,16 @@ export class TestControllerService {
 
         // to determine the Content-Type header
         const consumes: string[] = [
+            'application/json'
         ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected != undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
 
         return this.httpClient.request<any>('put',`${this.basePath}/v1/test`,
             {
-                params: queryParameters,
+                body: body,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
