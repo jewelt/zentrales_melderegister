@@ -22,6 +22,9 @@ import {MatGridListModule} from '@angular/material/grid-list';
 import {MatMenuModule} from '@angular/material/menu';
 import {LayoutModule} from '@angular/cdk/layout';
 import {TestComponent} from './test/test.component';
+import { MatDatepickerModule, MatNativeDateModule } from '@angular/material';
+import { MatRadioModule } from '@angular/material/radio';
+import { FormsModule } from '@angular/forms';
 import {ErfassungComponent} from './erfassung/erfassung.component';
 import {MatOptionModule} from '@angular/material/core';
 import {MatSelectModule} from '@angular/material/select';
@@ -59,6 +62,10 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
     MatMenuModule,
     LayoutModule,
     MatOptionModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatRadioModule,
+    FormsModule,
     MatSelectModule,
     SimplemattableModule,
     MatSnackBarModule,

@@ -12,6 +12,8 @@ import de.wirvsvirus.zentralesmelderegister.web.errors.ResourceNotFoundException
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jooq.DSLContext;
+import org.jooq.Table;
+import static org.jooq.impl.DSL.*;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,6 +28,7 @@ public class TestServiceImpl implements TestService {
     private final DSLContext dslContext;
     private final PatientService patientService;
     private final TestResultService testResultService;
+    private final UserAccountService userAccountService;
 
     @Override
     public TestDTO createTestDTO(TestDTO testDTO) {
@@ -45,10 +48,15 @@ public class TestServiceImpl implements TestService {
     @Override
     public TestDTO getTestDTO(Long testId) {
         log.debug("Get test  with id " + testId);
-        return this.dslContext.selectFrom(Tables.TEST)
+        return this.dslContext.select().from(Tables.TEST)
+                .join(Tables.PATIENT)
+                .on(Tables.PATIENT.ID.eq(Tables.TEST.PATIENT_ID))
                 .where(Tables.TEST.ID.eq(testId))
-                .fetchOptional()
+                .and(Tables.PATIENT.USER_ACCOUNT_ID.eq(userAccountService.getCurrentUserId()))
+                .fetchInto(TestRecord.class)
+                .stream()
                 .map(TestDTO::new)
+                .findFirst()
                 .orElseThrow(() -> new ResourceNotFoundException("Test Test with id " + testId + " was not found."));
     }
 
@@ -57,6 +65,11 @@ public class TestServiceImpl implements TestService {
         log.debug("Delete test  with id " + testId);
         final int affectedRows = this.dslContext.delete(Tables.TEST)
                 .where(Tables.TEST.ID.eq(testId))
+                .and(Tables.TEST.PATIENT_ID.in(
+                        select(Tables.PATIENT.ID)
+                        .from(Tables.PATIENT)
+                        .where(Tables.PATIENT.USER_ACCOUNT_ID.eq(userAccountService.getCurrentUserId()))
+                ))
                 .execute();
         if (affectedRows == 1) {
             log.debug("Successful delete. 1 row affected");
@@ -78,6 +91,11 @@ public class TestServiceImpl implements TestService {
                 .set(Tables.TEST.RESULT_DATE, testDTO.getResultDate())
                 .set(Tables.TEST.TEST_DATE, testDTO.getTestDate())
                 .where(Tables.TEST.ID.eq(testDTO.getId()))
+                .and(Tables.TEST.PATIENT_ID.in(
+                        select(Tables.PATIENT.ID)
+                        .from(Tables.PATIENT)
+                        .where(Tables.PATIENT.USER_ACCOUNT_ID.eq(userAccountService.getCurrentUserId()))
+                ))
                 .execute();
 
         if (affectedRows == 1) {
@@ -94,6 +112,8 @@ public class TestServiceImpl implements TestService {
     public List<TestDTO> getAllTests() {
         log.debug("get all tests");
         return this.dslContext.select().from(Tables.TEST)
+                .where(Tables.TEST.PATIENT_ID.eq(Tables.PATIENT.ID))
+                .and(Tables.PATIENT.USER_ACCOUNT_ID.eq(userAccountService.getCurrentUserId()))
                 .fetchInto(TestRecord.class)
                 .stream().map(TestDTO::new)
                 .collect(Collectors.toList());
