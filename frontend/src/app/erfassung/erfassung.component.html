@@ -1,0 +1,33 @@
+<div class="erfassung-form-container">
+  <form [formGroup]="formGroup" class="erfassung-form mat-elevation-z2">
+    <h3>Erfassung</h3>
+    <mat-form-field>
+      <mat-label>Bundesland</mat-label>
+      <mat-select formControlName="state">
+        <mat-option *ngFor="let state of states" [value]="state">
+          {{state}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Landkreis</mat-label>
+      <mat-select formControlName="state">
+        <mat-option *ngFor="let country of countries" [value]="country">
+          {{country}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Stadt</mat-label>
+      <mat-select formControlName="state">
+        <mat-option *ngFor="let city of cities" [value]="city">
+          {{city}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <button mat-button>
+      <mat-icon>send</mat-icon>
+      <span>Einsenden</span>
+    </button>
+  </form>
+</div>

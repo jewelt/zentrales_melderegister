@@ -22,13 +22,17 @@ import {MatGridListModule} from '@angular/material/grid-list';
 import {MatMenuModule} from '@angular/material/menu';
 import {LayoutModule} from '@angular/cdk/layout';
 import {TestComponent} from './test/test.component';
+import { ErfassungComponent } from './erfassung/erfassung.component';
+import {MatOptionModule} from "@angular/material/core";
+import {MatSelectModule} from "@angular/material/select";
 
 @NgModule({
   declarations: [
     AppComponent,
     NavComponent,
     DashboardComponent,
-    TestComponent
+    TestComponent,
+    ErfassungComponent
   ],
   imports: [
     BrowserModule,
@@ -48,7 +52,9 @@ import {TestComponent} from './test/test.component';
     HttpClientModule,
     MatGridListModule,
     MatMenuModule,
-    LayoutModule
+    LayoutModule,
+    MatOptionModule,
+    MatSelectModule
   ],
   providers: [],
   bootstrap: [AppComponent]
