@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @AllArgsConstructor
 @RequestMapping("v1")
@@ -38,6 +40,18 @@ public class CityController {
     public void deleteCity(@PathVariable("city-id") long cityId) {
         log.debug("request to delete a city with id " + cityId);
         this.cityService.deleteCityDTO(cityId);
+    }
+
+    @GetMapping("/city")
+    public List<CityDTO> getAllCities() {
+        log.debug("request to get all cities");
+        return this.cityService.getAllCities();
+    }
+
+    @GetMapping("/city/country/{country-id}")
+    public List<CityDTO> getAllByCountryId(@PathVariable("country-id") long countryId) {
+        log.debug("request to get all cities by country id: " + countryId);
+        return this.cityService.getAllCitiesByCountryId(countryId);
     }
 
 }

@@ -1,10 +1,13 @@
 package de.wirvsvirus.zentralesmelderegister.controller;
 
+import de.wirvsvirus.zentralesmelderegister.model.TestDTO;
 import de.wirvsvirus.zentralesmelderegister.model.TestResultDTO;
 import de.wirvsvirus.zentralesmelderegister.service.TestResultService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @AllArgsConstructor
@@ -38,6 +41,12 @@ public class TestResultController {
     public void deleteTestResult(@PathVariable("test-result-id") long testResultId) {
         log.debug("request to delete a test_result with id " + testResultId);
         this.testResultService.deleteTestResultDTO(testResultId);
+    }
+
+    @GetMapping("/test-result")
+    public List<TestResultDTO> getAllTestResults() {
+        log.debug("request to get all test results");
+        return this.testResultService.getAllTestResults();
     }
 
 }

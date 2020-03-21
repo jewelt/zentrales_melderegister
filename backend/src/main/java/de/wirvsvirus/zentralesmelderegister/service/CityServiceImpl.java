@@ -2,12 +2,16 @@ package de.wirvsvirus.zentralesmelderegister.service;
 
 import de.wirvsvirus.zentralesmelderegister.model.CityDTO;
 import de.wirvsvirus.zentralesmelderegister.model.jooq.Tables;
+import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.records.CityRecord;
 import de.wirvsvirus.zentralesmelderegister.web.errors.InternalServerErrorException;
 import de.wirvsvirus.zentralesmelderegister.web.errors.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -58,8 +62,8 @@ public class CityServiceImpl implements CityService {
 
     @Override
     public void updateCity(CityDTO cityDTO) {
-        log.debug("Insert city: " + cityDTO.toString());
-        final int affectedRows = this.dslContext.update(Tables.TEST_RESULT)
+        log.debug("update city: " + cityDTO.toString());
+        final int affectedRows = this.dslContext.update(Tables.CITY)
                 .set(Tables.CITY.COUNTRY_ID, cityDTO.getCountryId())
                 .set(Tables.CITY.COORDINATES_LATITUDE, cityDTO.getCoordinatesLatitude())
                 .set(Tables.CITY.COORDINATES_LONGITUDE, cityDTO.getCoordinatesLongitude())
@@ -75,5 +79,25 @@ public class CityServiceImpl implements CityService {
             throw new InternalServerErrorException(
                     "Could not city with id " + cityDTO.getId());
         }
+    }
+
+    @Override
+    public List<CityDTO> getAllCities() {
+        log.debug("get all cities");
+        return this.dslContext.select().from(Tables.CITY)
+                .fetchInto(CityRecord.class)
+                .stream().map(CityDTO::new)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<CityDTO> getAllCitiesByCountryId(long countryId) {
+
+        log.debug("get all cities by country id: " + countryId);
+        return this.dslContext.select().from(Tables.CITY)
+                .where(Tables.CITY.COUNTRY_ID.eq(countryId))
+                .fetchInto(CityRecord.class)
+                .stream().map(CityDTO::new)
+                .collect(Collectors.toList());
     }
 }
