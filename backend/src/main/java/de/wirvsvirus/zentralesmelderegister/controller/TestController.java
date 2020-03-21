@@ -1,7 +1,7 @@
 package de.wirvsvirus.zentralesmelderegister.controller;
 
-import de.wirvsvirus.zentralesmelderegister.model.PatientDTO;
 import de.wirvsvirus.zentralesmelderegister.model.TestDTO;
+import de.wirvsvirus.zentralesmelderegister.model.TestPatientTestResultDTO;
 import de.wirvsvirus.zentralesmelderegister.service.TestService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,4 +49,9 @@ public class TestController {
         return this.testService.getAllTests();
     }
 
+    @GetMapping("/test/with-patients")
+    public List<TestPatientTestResultDTO> getAllTestsWithPatients() {
+        log.debug("request to get all tests with patients");
+        return this.testService.getAllTestsWithPatients();
+    }
 }

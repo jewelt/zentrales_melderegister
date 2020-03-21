@@ -2,6 +2,7 @@ package de.wirvsvirus.zentralesmelderegister.service;
 
 import de.wirvsvirus.zentralesmelderegister.model.CityDTO;
 import de.wirvsvirus.zentralesmelderegister.model.TestDTO;
+import de.wirvsvirus.zentralesmelderegister.model.TestPatientTestResultDTO;
 import de.wirvsvirus.zentralesmelderegister.model.TestResultDTO;
 import de.wirvsvirus.zentralesmelderegister.model.jooq.Tables;
 import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.records.CityRecord;
@@ -13,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,6 +24,8 @@ import java.util.stream.Collectors;
 public class TestServiceImpl implements TestService {
 
     private final DSLContext dslContext;
+    private final PatientService patientService;
+    private final TestResultService testResultService;
 
     @Override
     public TestDTO createTestDTO(TestDTO testDTO) {
@@ -93,5 +97,18 @@ public class TestServiceImpl implements TestService {
                 .fetchInto(TestRecord.class)
                 .stream().map(TestDTO::new)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<TestPatientTestResultDTO> getAllTestsWithPatients() {
+        final List<TestPatientTestResultDTO> testPatientTestResultDTOS = new ArrayList<>();
+
+        getAllTests().forEach(testDTO -> {
+            final TestPatientTestResultDTO testPatientTestResultDTO = new TestPatientTestResultDTO(testDTO);
+            testPatientTestResultDTO.setPatientDTO(patientService.getPatientDTO(testDTO.getPatientId()));
+            testPatientTestResultDTO.setTestResultDTO(testResultService.getTestResultDTO(testDTO.getTestResultId()));
+            testPatientTestResultDTOS.add(testPatientTestResultDTO);
+        });
+        return testPatientTestResultDTOS;
     }
 }
