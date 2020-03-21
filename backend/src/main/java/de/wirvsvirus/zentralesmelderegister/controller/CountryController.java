@@ -25,13 +25,13 @@ public class CountryController {
     }
 
     @PostMapping("/country")
-    public CountryDTO createCountry(CountryDTO countryDTO) {
+    public CountryDTO createCountry(@RequestBody CountryDTO countryDTO) {
         log.debug("request to create a country: " + countryDTO.toString());
         return this.countryService.createCountryDTO(countryDTO);
     }
 
     @PutMapping("/country")
-    public void updateCountry(CountryDTO countryDTO) {
+    public void updateCountry(@RequestBody CountryDTO countryDTO) {
         log.debug("request to update a country: " + countryDTO.toString());
         this.countryService.updateCountry(countryDTO);
     }

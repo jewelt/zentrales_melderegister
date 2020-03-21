@@ -21,12 +21,12 @@ public class StateController {
 
     }
     @PostMapping("/state")
-    public StateDTO createState(StateDTO stateDTO){
+    public StateDTO createState(@RequestBody StateDTO stateDTO){
         log.debug("request to create a state " +stateDTO.toString());
         return this.stateService.createStateDTO(stateDTO);
     }
     @PutMapping("/state")
-    public void updateState(StateDTO stateDTO){
+    public void updateState(@RequestBody StateDTO stateDTO){
         log.debug("request to update state" + stateDTO.toString());
         this.stateService.updateStateDTO(stateDTO);
     }

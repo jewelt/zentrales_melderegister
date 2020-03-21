@@ -32,13 +32,13 @@ public class PatientController {
     }
 
     @PostMapping("/patient")
-    public PatientDTO createPatient(PatientDTO patientDTO) {
+    public PatientDTO createPatient(@RequestBody PatientDTO patientDTO) {
         log.debug("request to create a patient: " + patientDTO.toString());
         return this.patientService.createPatientDTO(patientDTO);
     }
 
     @PutMapping("/patient")
-    public void updatePatient(PatientDTO patientDTO) {
+    public void updatePatient(@RequestBody PatientDTO patientDTO) {
         log.debug("request to update a patient: " + patientDTO.toString());
         this.patientService.updatePatientDTO(patientDTO);
     }

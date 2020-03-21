@@ -16,6 +16,10 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -54,9 +58,10 @@ public class SwaggerDocumentationConfig {
                 .paths(PathSelectors.any())
                 .build()
                 .pathMapping("/")
-//                .directModelSubstitute(LocalDate.class, String.class)
-//                .directModelSubstitute(LocalDateTime.class, String.class)
-//                .directModelSubstitute(ZonedDateTime.class, String.class)
+                .directModelSubstitute(LocalDate.class, String.class)
+                .directModelSubstitute(LocalDateTime.class, String.class)
+                .directModelSubstitute(ZonedDateTime.class, String.class)
+                .directModelSubstitute(OffsetDateTime.class, String.class)
                 .genericModelSubstitutes(ResponseEntity.class)
                 .alternateTypeRules(
                         newRule(typeResolver.resolve(DeferredResult.class,

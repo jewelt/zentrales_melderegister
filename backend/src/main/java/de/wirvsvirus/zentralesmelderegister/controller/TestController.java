@@ -25,13 +25,13 @@ public class TestController {
     }
 
     @PostMapping("/test")
-    public TestDTO createTest(TestDTO testDTO) {
+    public TestDTO createTest(@RequestBody TestDTO testDTO) {
         log.debug("request to create a test: " + testDTO.toString());
         return this.testService.createTestDTO(testDTO);
     }
 
     @PutMapping("/test")
-    public void updateTest(TestDTO testDTO) {
+    public void updateTest(@RequestBody TestDTO testDTO) {
         log.debug("request to update a test: " + testDTO.toString());
         this.testService.updateTest(testDTO);
     }
