@@ -65,7 +65,7 @@ public class CountryServiceImpl implements CountryService {
     @Override
     public void updateCountry(CountryDTO countryDTO) {
         log.debug("update country: " + countryDTO.toString());
-        final int affectedRows = this.dslContext.update(Tables.TEST_RESULT)
+        final int affectedRows = this.dslContext.update(Tables.COUNTRY)
                 .set(Tables.COUNTRY.STATE_ID, countryDTO.getStateId())
                 .set(Tables.COUNTRY.COORDINATES_LATITUDE, countryDTO.getCoordinatesLatitude())
                 .set(Tables.COUNTRY.COORDINATES_LONGITUDE, countryDTO.getCoordinatesLongitude())
