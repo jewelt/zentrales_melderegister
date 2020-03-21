@@ -16,6 +16,10 @@
 
 	<properties>
 		<java.version>1.8</java.version>
+		<spring.datasource.url>jdbc:postgresql://localhost:5432/zentrales_melderegister</spring.datasource.url>
+		<spring.datasource.driverClassName>org.postgresql.Driver</spring.datasource.driverClassName>
+		<spring.datasource.username>zentrales_melderegister</spring.datasource.username>
+		<spring.datasource.password>zentrales_melderegister123</spring.datasource.password>
 	</properties>
 
 	<dependencies>
@@ -31,6 +35,11 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-jooq</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -38,6 +47,18 @@
 		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-core</artifactId>
+		</dependency>
+
+
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>2.9.2</version>
+		</dependency>
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>2.9.2</version>
 		</dependency>
 
 		<dependency>
@@ -81,5 +102,114 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>codegen</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.flywaydb</groupId>
+						<artifactId>flyway-maven-plugin</artifactId>
+						<version>5.2.4</version>
+
+						<!-- Note that we're executing the Flyway plugin in the "generate-sources"
+                          phase -->
+						<executions>
+							<execution>
+								<phase>generate-sources</phase>
+								<goals>
+									<goal>migrate</goal>
+								</goals>
+							</execution>
+						</executions>
+
+						<!-- Note that we need to prefix the db/migration path with filesystem:
+                          to prevent Flyway from looking for our migration scripts only on the classpath -->
+						<configuration>
+							<driver>${spring.datasource.driverClassName}</driver>
+							<url>${spring.datasource.url}</url>
+							<user>${spring.datasource.username}</user>
+							<password>${spring.datasource.password}</password>
+							<locations>
+								<location>filesystem:src/main/resources/db/migration</location>
+							</locations>
+						</configuration>
+					</plugin>
+
+
+					<!-- The jOOQ code generator plugin -->
+					<plugin>
+						<groupId>org.jooq</groupId>
+						<artifactId>jooq-codegen-maven</artifactId>
+						<version>3.11.9</version>
+
+						<executions>
+							<execution>
+								<id>generate-mysql</id>
+								<phase>generate-sources</phase>
+								<goals>
+									<goal>generate</goal>
+								</goals>
+								<configuration>
+									<jdbc>
+										<driver>${spring.datasource.driverClassName}</driver>
+										<url>${spring.datasource.url}</url>
+										<user>${spring.datasource.username}</user>
+										<password>${spring.datasource.password}</password>
+									</jdbc>
+									<generator>
+										<database>
+											<name>org.jooq.meta.postgres.PostgresDatabase</name>
+											<includes>.*</includes>
+											<excludes></excludes>
+											<inputSchema>public</inputSchema>
+										</database>
+										<generate>
+											<deprecated>false</deprecated>
+											<instanceFields>true</instanceFields>
+											<pojos>false</pojos>
+										</generate>
+										<target>
+											<packageName>de.wirvsvirus.zentralesmelderegister.model.jooq</packageName>
+											<directory>src/main/java</directory>
+										</target>
+									</generator>
+								</configuration>
+							</execution>
+						</executions>
+
+						<dependencies>
+							<dependency>
+								<groupId>org.postgresql</groupId>
+								<artifactId>postgresql</artifactId>
+								<version>42.2.5</version>
+							</dependency>
+						</dependencies>
+
+					</plugin>
+
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>build-helper-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>add-source</id>
+								<phase>generate-sources</phase>
+								<goals>
+									<goal>add-source</goal>
+								</goals>
+								<configuration>
+									<sources>
+										<source>${project.build.directory}/generated-sources/jooq/</source>
+									</sources>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 </project>
