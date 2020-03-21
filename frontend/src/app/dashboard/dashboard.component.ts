@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
-import { map } from 'rxjs/operators';
-import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
+import {Component} from '@angular/core';
+import {map} from 'rxjs/operators';
+import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-dashboard',
@@ -10,17 +10,17 @@ import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 export class DashboardComponent {
   // based on the screen size, switch from standard to one column per row
   cards = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
-    map(({ matches }) => {
+    map(({matches}) => {
       if (matches) {
         return [
-          { title: 'Altersverteilung', cols: 2, rows: 1 },
-          { title: 'Bundesland', cols: 2, rows: 1 }
+          {title: 'Altersverteilung', cols: 2, rows: 1},
+          {title: 'Bundesland', cols: 2, rows: 1}
         ];
       }
 
       return [
-        { title: 'Altersverteilung', cols: 1, rows: 1 },
-        { title: 'Bundesland', cols: 1, rows: 1 }
+        {title: 'Altersverteilung', cols: 1, rows: 1},
+        {title: 'Bundesland', cols: 1, rows: 1}
       ];
     })
   );
@@ -81,5 +81,10 @@ export class DashboardComponent {
     }
   ];
 
-  constructor(private breakpointObserver: BreakpointObserver) { }
+  constructor(private breakpointObserver: BreakpointObserver) {
+  }
+
+  onSelect($event: any) {
+    console.log($event);
+  }
 }

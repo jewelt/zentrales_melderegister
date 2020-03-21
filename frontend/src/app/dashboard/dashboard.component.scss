@@ -18,3 +18,17 @@ mat-card-content {
   right: 15px;
   bottom: 15px;
 }
+
+.chart-box {
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0;
+
+  * {
+    flex: 1 1 auto;
+    min-height: 0;
+    min-width: 0;
+  }
+}
