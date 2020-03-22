@@ -8,7 +8,7 @@ import {
   TestControllerService,
   TestResultControllerService,
   TestResultDTO
-} from '../clients/melderegister';
+} from '../../clients/melderegister';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import * as moment from 'moment';
 

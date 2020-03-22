@@ -1,7 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
 
 // Scrollbar Fun
 
@@ -22,4 +28,11 @@ body {
   scrollbar-width: thin;
   scrollbar-color: #3f51b5 rgba(0, 0, 0, 0.1);
   background-color: #e8e8e8;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  background: white;
 }

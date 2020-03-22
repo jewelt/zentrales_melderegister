@@ -1,24 +1,22 @@
 import {Component, OnInit} from '@angular/core';
 import {TableColumn} from 'simplemattable';
-import {TestControllerService, TestResultControllerService} from '../clients/melderegister';
-import {TestPatientTestResultDTO} from '../clients/melderegister/model/testPatientTestResultDTO';
-import {MatSnackBar} from '@angular/material/snack-bar';
+import {TestControllerService, TestPatientTestResultDTO} from '../../clients/melderegister';
 import * as moment from 'moment';
+import {ExportService} from '../../services/export.service';
 
 @Component({
-  selector: 'app-liste',
-  templateUrl: './test-list.component.html',
-  styleUrls: ['./test-list.component.scss']
+  selector: 'app-tabelle',
+  templateUrl: './test-list-all.component.html',
+  styleUrls: ['./test-list-all.component.scss']
 })
-export class TestListComponent implements OnInit {
+export class TestListAllComponent implements OnInit {
 
   private dateFormat = 'YYYY-MM-DD HH:mm';
   columns: TableColumn<TestPatientTestResultDTO, any>[] = [];
   data: TestPatientTestResultDTO[] = [];
 
   constructor(private testControllerService: TestControllerService,
-              private testResultControllerService: TestResultControllerService,
-              private matSnackBar: MatSnackBar) {
+              private exportService: ExportService) {
   }
 
   ngOnInit() {
@@ -40,16 +38,8 @@ export class TestListComponent implements OnInit {
     });
   }
 
-  delete(testToDelete: TestPatientTestResultDTO) {
-    this.testControllerService.deleteTestUsingDELETE(testToDelete.id).subscribe(() => {
-      this.data = this.data.filter(test => test.id !== testToDelete.id);
-      this.matSnackBar.open('Test gelöscht.', 'OK', {
-        duration: 3000
-      });
-    }, error => {
-      this.matSnackBar.open('Test konnte nicht gelöscht werden.', 'OK', {
-        duration: 3000
-      });
-    });
+  csvExport() {
+    this.exportService.export(this.data);
   }
+
 }

@@ -3,9 +3,9 @@ import {Observable} from 'rxjs';
 import {map, shareReplay} from 'rxjs/operators';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {AuthService} from '../services/auth.service';
+import {AuthService} from '../../services/auth.service';
 import {Router} from '@angular/router';
-import {UserAccountApiControllerService} from '../clients/melderegister';
+import {UserAccountApiControllerService} from '../../clients/melderegister';
 
 @Component({
   selector: 'app-nav',

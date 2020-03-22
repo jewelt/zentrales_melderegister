@@ -3,7 +3,7 @@ import {LOCALE_ID, NgModule} from '@angular/core';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
-import {NavComponent} from './nav/nav.component';
+import {NavComponent} from './components/nav/nav.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatIconModule} from '@angular/material/icon';
 import {MatSidenavModule} from '@angular/material/sidenav';
@@ -17,26 +17,26 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatInputModule} from '@angular/material/input';
 import {HttpClientModule} from '@angular/common/http';
-import {DashboardComponent} from './dashboard/dashboard.component';
+import {DashboardComponent} from './components/dashboard/dashboard.component';
 import {MatGridListModule} from '@angular/material/grid-list';
 import {MatMenuModule} from '@angular/material/menu';
 import {LayoutModule} from '@angular/cdk/layout';
 import {MatDatepickerModule, MatNativeDateModule} from '@angular/material';
 import {MatRadioModule} from '@angular/material/radio';
-import {ErfassungComponent} from './erfassung/erfassung.component';
+import {ErfassungComponent} from './components/erfassung/erfassung.component';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatOptionModule} from '@angular/material/core';
 import {MatSelectModule} from '@angular/material/select';
-import {TestListComponent} from './test-list/test-list.component';
+import {TestListComponent} from './components/test-list/test-list.component';
 import {SimplemattableModule} from 'simplemattable';
 import {ApiModule, BASE_PATH} from './clients/melderegister';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatMomentDateModule, MomentDateAdapter} from '@angular/material-moment-adapter';
-import { TimepickerComponent } from './timepicker/timepicker.component';
+import { TimepickerComponent } from './components/timepicker/timepicker.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
-import { TabelleComponent } from './tabelle/tabelle.component';
-import {MatAutocompleteModule} from "@angular/material/autocomplete";
-import {MatTooltipModule} from "@angular/material/tooltip";
-import { LoginComponent } from './login/login.component';
+import { TestListAllComponent } from './components/test-list-all/test-list-all.component';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import { LoginComponent } from './components/login/login.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +46,7 @@ import { LoginComponent } from './login/login.component';
     ErfassungComponent,
     TestListComponent,
     TimepickerComponent,
-    TabelleComponent,
+    TestListAllComponent,
     LoginComponent
   ],
   imports: [

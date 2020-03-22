@@ -1,0 +1,10 @@
+<div class="app-header">
+  <h1 class="mat-h1" style="padding-top: 15px;">Testliste</h1>
+  <span style="flex: 1 1 auto"></span>
+  <button mat-raised-button color="primary" (click)="csvExport()">
+    <mat-icon>cloud_download</mat-icon>
+    CSV-Export
+  </button>
+</div>
+<smc-simplemattable [columns]="columns" [data]="data" [paginator]="true"
+                    [sorting]="true"></smc-simplemattable>

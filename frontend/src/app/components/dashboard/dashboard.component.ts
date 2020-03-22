@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {map} from 'rxjs/operators';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
-import {StatisticsControllerService} from '../clients/melderegister';
+import {StatisticsControllerService} from '../../clients/melderegister';
 import * as moment from 'moment';
 
 @Component({
