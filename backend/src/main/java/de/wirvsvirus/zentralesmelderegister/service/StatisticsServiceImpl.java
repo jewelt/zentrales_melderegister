@@ -1,26 +1,32 @@
 package de.wirvsvirus.zentralesmelderegister.service;
 
-import de.wirvsvirus.zentralesmelderegister.model.CountByAge;
-import de.wirvsvirus.zentralesmelderegister.model.CountByDay;
-import de.wirvsvirus.zentralesmelderegister.model.CountByState;
-import de.wirvsvirus.zentralesmelderegister.model.TestResultDistribution;
+import de.wirvsvirus.zentralesmelderegister.model.*;
+import de.wirvsvirus.zentralesmelderegister.model.jooq.Tables;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jooq.DSLContext;
 import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @AllArgsConstructor
 @Slf4j
+
+
 public class StatisticsServiceImpl implements StatisticsService {
 
+
+
     private final DataSource dataSource;
+    private final DSLContext dslContext;
 
     @Override
     public List<CountByState> getCountByStateNow() {
@@ -154,6 +160,71 @@ public class StatisticsServiceImpl implements StatisticsService {
         return testResultDistribution;
     }
 
+    @Override
+    public TestCaseDistribution getTestCaseDistribution() {
+        final TestCaseDistribution testCaseDistribution = new TestCaseDistribution();
+
+
+
+         testCaseDistribution.setPositiv(BigDecimal.valueOf(this.dslContext.selectCount().from(Tables.TEST_RESULT)
+                  .where(Tables.TEST_RESULT.DESCRIPTION.lower().trim().eq("positiv"))
+                 .fetchOne(0,Long.class)));
+
+         testCaseDistribution.setNegativ(BigDecimal.valueOf(this.dslContext.selectCount().from(Tables.TEST_RESULT)
+                    .where(Tables.TEST_RESULT.DESCRIPTION.lower().trim().eq("negativ"))
+                 .fetchOne(0,Long.class)));
+
+
+         testCaseDistribution.setTests(testCaseDistribution.getNegativ().add(testCaseDistribution.getPositiv()));
+
+         return testCaseDistribution;
+    }
+
+    @Override
+    public List<DataByDateAndLocation> getDataByDateAndLocation(SearchRequestDTO searchRequestDTO) {
+        final List<DataByDateAndLocation> dataByDateAndLocation = new ArrayList<>();
+        final long days = ChronoUnit.DAYS.between(searchRequestDTO.getStartDate(), searchRequestDTO.getEndDate());
+
+
+        for(long i =0; i<=days; i++){
+                DataByDateAndLocation today = new DataByDateAndLocation();
+                today.setDate(searchRequestDTO.getStartDate().plusDays(i));
+
+                today.setGrowth(BigDecimal.valueOf(dslContext.selectCount().from(Tables.TEST)
+                        .join(Tables.PATIENT)
+                        .on(Tables.PATIENT.ID.eq(Tables.TEST.PATIENT_ID))
+                        .join(Tables.CITY)
+                        .on(Tables.CITY.ID.eq(Tables.PATIENT.CITY_ID))
+                        .join(Tables.COUNTRY)
+                        .on(Tables.COUNTRY.ID.eq(Tables.CITY.COUNTRY_ID))
+                        .where(Tables.COUNTRY.ID.eq(searchRequestDTO.getCountryId()))
+                        .and(Tables.TEST.RESULT_DATE.eq(today.getDate()))
+                        .fetchOne(0,Long.class)));
+
+            today.setTotal(BigDecimal.valueOf(dslContext.selectCount().from(Tables.TEST)
+                    .join(Tables.PATIENT)
+                    .on(Tables.PATIENT.ID.eq(Tables.TEST.PATIENT_ID))
+                    .join(Tables.CITY)
+                    .on(Tables.CITY.ID.eq(Tables.PATIENT.CITY_ID))
+                    .join(Tables.COUNTRY)
+                    .on(Tables.COUNTRY.ID.eq(Tables.CITY.COUNTRY_ID))
+                    .where(Tables.COUNTRY.ID.eq(searchRequestDTO.getCountryId()))
+                    .and(Tables.TEST.RESULT_DATE.lessOrEqual(today.getDate()))
+                    .fetchOne(0,Long.class)));
+
+                dataByDateAndLocation.add(today);
+
+
+
+
+
+
+        }
+        return dataByDateAndLocation;
+
+    }
+
+
     private List<CountByState> getGrowthByStateToday(String dateParam) {
         final List<CountByState> countByStates = new ArrayList<>();
         try (final Connection connection = dataSource.getConnection()) {
@@ -180,4 +251,8 @@ public class StatisticsServiceImpl implements StatisticsService {
         }
         return countByStates;
     }
+
+
+
+
 }

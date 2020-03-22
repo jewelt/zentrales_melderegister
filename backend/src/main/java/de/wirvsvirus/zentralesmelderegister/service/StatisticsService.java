@@ -1,9 +1,6 @@
 package de.wirvsvirus.zentralesmelderegister.service;
 
-import de.wirvsvirus.zentralesmelderegister.model.CountByAge;
-import de.wirvsvirus.zentralesmelderegister.model.CountByDay;
-import de.wirvsvirus.zentralesmelderegister.model.CountByState;
-import de.wirvsvirus.zentralesmelderegister.model.TestResultDistribution;
+import de.wirvsvirus.zentralesmelderegister.model.*;
 
 import java.util.List;
 
@@ -20,4 +17,8 @@ public interface StatisticsService {
     List<CountByAge> getCountByAge();
 
     List<TestResultDistribution> getTestResultDistribution();
+
+    TestCaseDistribution getTestCaseDistribution();
+
+    List<DataByDateAndLocation> getDataByDateAndLocation(SearchRequestDTO searchRequestDTO);
 }

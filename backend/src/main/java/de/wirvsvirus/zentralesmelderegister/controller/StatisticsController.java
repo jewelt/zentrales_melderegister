@@ -1,13 +1,11 @@
 package de.wirvsvirus.zentralesmelderegister.controller;
 
-import de.wirvsvirus.zentralesmelderegister.model.CountByAge;
-import de.wirvsvirus.zentralesmelderegister.model.CountByDay;
-import de.wirvsvirus.zentralesmelderegister.model.CountByState;
-import de.wirvsvirus.zentralesmelderegister.model.TestResultDistribution;
+import de.wirvsvirus.zentralesmelderegister.model.*;
 import de.wirvsvirus.zentralesmelderegister.service.StatisticsService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -55,6 +53,12 @@ public class StatisticsController {
 //    @PreAuthorize("hasAuthority('ADMIN')")
     public List<TestResultDistribution> getTestResultDistribution() {
         return statisticsService.getTestResultDistribution();
+    }
+
+    //    @PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping("statistic/data-by-date-and-location")
+    public List<DataByDateAndLocation> getDataByDateAndLocation(SearchRequestDTO searchRequestDTO){
+        return statisticsService.getDataByDateAndLocation(searchRequestDTO);
     }
 
 }
