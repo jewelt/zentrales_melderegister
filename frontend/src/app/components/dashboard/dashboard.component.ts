@@ -22,20 +22,22 @@ export class DashboardComponent implements OnInit, OnDestroy {
     map(({matches}) => {
       if (matches) {
         return [
-          {title: 'Anzahl nach Bundesland', cols: 2, rows: 3, type: DiagramType.ANZAHL_BUNDESLAND},
-          {title: 'Anzahl nach Alter', cols: 2, rows: 3, type: DiagramType.ANZAHL_ALTER},
-          {title: 'Gesamtanzahl nach Tag', cols: 2, rows: 3, type: DiagramType.ANZAHL_TAG},
-          {title: 'Heutige Anzahl nach Bundesland', cols: 2, rows: 3, type: DiagramType.ZUWACHS_BUNDESLAND},
-          {title: 'Neuinfektionen nach Tag', cols: 2, rows: 3, type: DiagramType.ZUWACHS_TAG}
+          {title: 'Gesamtinfektionen nach Bundesland', cols: 2, rows: 3, type: DiagramType.ANZAHL_BUNDESLAND},
+          {title: 'Gesamtinfektionen nach Alter', cols: 2, rows: 3, type: DiagramType.ANZAHL_ALTER},
+          {title: 'Infektionsanzahl', cols: 2, rows: 3, type: DiagramType.ANZAHL_INFEKTIONEN},
+          {title: 'Heutige Infektionen nach Bundesland', cols: 2, rows: 3, type: DiagramType.ZUWACHS_BUNDESLAND},
+          {title: 'Entwicklung der Gesamtinfektionen', cols: 2, rows: 3, type: DiagramType.ANZAHL_TAG},
+          {title: 'Entwicklung der Neuinfektionen', cols: 2, rows: 3, type: DiagramType.ZUWACHS_TAG}
         ];
       }
 
       return [
-        {title: 'Anzahl nach Bundesland', cols: 1, rows: 1, type: DiagramType.ANZAHL_BUNDESLAND},
-        {title: 'Anzahl nach Alter', cols: 1, rows: 1, type: DiagramType.ANZAHL_ALTER},
-        {title: 'Gesamtanzahl nach Tag', cols: 1, rows: 1, type: DiagramType.ANZAHL_TAG},
-        {title: 'Heutige Anzahl nach Bundesland', cols: 1, rows: 1, type: DiagramType.ZUWACHS_BUNDESLAND},
-        {title: 'Neuinfektionen nach Tag', cols: 1, rows: 1, type: DiagramType.ZUWACHS_TAG}
+        {title: 'Gesamtinfektionen nach Bundesland', cols: 1, rows: 1, type: DiagramType.ANZAHL_BUNDESLAND},
+        {title: 'Gesamtinfektionen nach Alter', cols: 1, rows: 1, type: DiagramType.ANZAHL_ALTER},
+        {title: 'Infektionsanzahl', cols: 2, rows: 1, type: DiagramType.ANZAHL_INFEKTIONEN},
+        {title: 'Heutige Infektionen nach Bundesland', cols: 1, rows: 1, type: DiagramType.ZUWACHS_BUNDESLAND},
+        {title: 'Entwicklung der Gesamtinfektionen', cols: 1, rows: 1, type: DiagramType.ANZAHL_TAG},
+        {title: 'Entwicklung der Neuinfektionen', cols: 1, rows: 1, type: DiagramType.ZUWACHS_TAG}
       ];
     })
   );
@@ -55,6 +57,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   public growthByDay = [];
   public growthByStateToday = [];
   public timestamp: string;
+  public infectedAndGrowthByDay = [];
 
   private timer;
 
@@ -110,17 +113,34 @@ export class DashboardComponent implements OnInit, OnDestroy {
     });
 
     this.statisticsControllerService.getCountByAgeUsingGET().subscribe(data => {
-      this.infectedByAge = data.map(age => ({
-        value: age.value,
-        name: age.age
-      })).sort((a, b) => {
-        if (a.name > b.name) {
-          return 1;
-        } else if (a.name < b.name) {
-          return -1;
-        } else {
-          return 0;
-        }
+      const groups = [{
+        from: 0,
+        to: 4
+      }, {
+        from: 5,
+        to: 14
+      }, {
+        from: 15,
+        to: 34
+      }, {
+        from: 35,
+        to: 59
+      }, {
+        from: 60,
+        to: 79
+      }, {
+        from: 80,
+        to: 200
+      }];
+      this.infectedByAge = groups.map(group => {
+        const infected = data.filter(age => age.age >= group.from && age.age <= group.to);
+        const nameOfGroup = group.from + (group.to > 100 ? '+' : ' - ' + group.to);
+        return {
+          name: nameOfGroup,
+          value: infected.reduce((acc, age) => {
+            return acc + age.value;
+          }, 0)
+        };
       });
     });
 
@@ -129,21 +149,33 @@ export class DashboardComponent implements OnInit, OnDestroy {
         value: countByDay.value,
         name: countByDay.date
       }));
-    });
 
-    this.statisticsControllerService.getGrowthByDayUsingGET().subscribe(data => {
-      this.growthByDay = data.map(countByDay => ({
-        value: countByDay.value,
-        name: countByDay.date
-      })).sort((a, b) => {
-        if (a.name > b.name) {
-          return 1;
-        } else if (a.name < b.name) {
-          return -1;
-        } else {
-          return 0;
-        }
+      this.statisticsControllerService.getGrowthByDayUsingGET().subscribe(dataGrowth => {
+        this.growthByDay = dataGrowth.map(countByDay => ({
+          value: countByDay.value,
+          name: countByDay.date
+        })).sort((a, b) => {
+          if (a.name > b.name) {
+            return 1;
+          } else if (a.name < b.name) {
+            return -1;
+          } else {
+            return 0;
+          }
+        });
+
+        this.infectedAndGrowthByDay = [
+          {
+            name: 'Gesamtinfektionen',
+            series: this.infectedByDay
+          }, {
+            name: 'Neuinfektionen',
+            series: this.growthByDay
+          }
+        ];
+        console.log(this.infectedAndGrowthByDay);
       });
+
     });
 
     this.statisticsControllerService.getGrowthByStateTodayUsingGET().subscribe(data => {
@@ -173,6 +205,7 @@ enum DiagramType {
   ANZAHL_BUNDESLAND = 1,
   ANZAHL_ALTER,
   ANZAHL_TAG,
+  ANZAHL_INFEKTIONEN,
   ZUWACHS_TAG,
   ZUWACHS_BUNDESLAND
 }
