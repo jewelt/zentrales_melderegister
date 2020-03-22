@@ -221,7 +221,8 @@ public class StatisticsServiceImpl implements StatisticsService {
                         .on(Tables.TEST_RESULT.ID.eq(Tables.TEST.TEST_RESULT_ID))
                         .where(Tables.COUNTRY.ID.eq(searchRequestDTO.getCountryId()))
                         .and(Tables.TEST_RESULT.DESCRIPTION.lower().trim().eq("positiv"))
-                        .and(Tables.TEST.RESULT_DATE.eq(today.getDate()))
+                        .and(Tables.TEST.RESULT_DATE.between(today.getDate().toLocalDate().atTime(LocalTime.MIN.atOffset(ZoneOffset.UTC)),
+                                today.getDate().toLocalDate().atTime(LocalTime.MAX.atOffset(ZoneOffset.UTC))))
                         .fetchOne(0,Long.class)));
 
             today.setTotal(BigDecimal.valueOf(dslContext.selectCount().from(Tables.TEST)
@@ -235,7 +236,7 @@ public class StatisticsServiceImpl implements StatisticsService {
                     .on(Tables.COUNTRY.ID.eq(Tables.CITY.COUNTRY_ID))
                     .where(Tables.COUNTRY.ID.eq(searchRequestDTO.getCountryId()))
                     .and(Tables.TEST_RESULT.DESCRIPTION.lower().trim().eq("positiv"))
-                    .and(Tables.TEST.RESULT_DATE.lessOrEqual(today.getDate()))
+                    .and(Tables.TEST.RESULT_DATE.lessOrEqual(today.getDate().toLocalDate().atTime(LocalTime.MAX.atOffset(ZoneOffset.UTC))))
                     .fetchOne(0,Long.class)));
 
                 dataByDateAndLocation.add(today);
@@ -253,7 +254,8 @@ public class StatisticsServiceImpl implements StatisticsService {
                         .on(Tables.STATE.ID.eq(Tables.COUNTRY.STATE_ID))
                         .where(Tables.STATE.ID.eq(searchRequestDTO.getStateId()))
                         .and(Tables.TEST_RESULT.DESCRIPTION.lower().trim().eq("positiv"))
-                        .and(Tables.TEST.RESULT_DATE.eq(today.getDate()))
+                        .and(Tables.TEST.RESULT_DATE.between(today.getDate().toLocalDate().atTime(LocalTime.MIN.atOffset(ZoneOffset.UTC)),
+                                today.getDate().toLocalDate().atTime(LocalTime.MAX.atOffset(ZoneOffset.UTC))))
                         .fetchOne(0,Long.class)));
 
                 today.setTotal(BigDecimal.valueOf(dslContext.selectCount().from(Tables.TEST)
@@ -269,7 +271,7 @@ public class StatisticsServiceImpl implements StatisticsService {
                         .on(Tables.STATE.ID.eq(Tables.COUNTRY.STATE_ID))
                         .where(Tables.STATE.ID.eq(searchRequestDTO.getStateId()))
                         .and(Tables.TEST_RESULT.DESCRIPTION.lower().trim().eq("positiv"))
-                        .and(Tables.TEST.RESULT_DATE.lessOrEqual(today.getDate()))
+                        .and(Tables.TEST.RESULT_DATE.lessOrEqual(today.getDate().toLocalDate().atTime(LocalTime.MAX.atOffset(ZoneOffset.UTC))))
                         .fetchOne(0,Long.class)));
 
                 dataByDateAndLocation.add(today);
@@ -280,7 +282,8 @@ public class StatisticsServiceImpl implements StatisticsService {
                         .join(Tables.PATIENT)
                         .on(Tables.PATIENT.ID.eq(Tables.TEST.PATIENT_ID))
                         .and(Tables.TEST_RESULT.DESCRIPTION.lower().trim().eq("positiv"))
-                        .and(Tables.TEST.RESULT_DATE.eq(today.getDate()))
+                        .and(Tables.TEST.RESULT_DATE.between(today.getDate().toLocalDate().atTime(LocalTime.MIN.atOffset(ZoneOffset.UTC)),
+                                today.getDate().toLocalDate().atTime(LocalTime.MAX.atOffset(ZoneOffset.UTC))))
                         .fetchOne(0,Long.class)));
 
                 today.setTotal(BigDecimal.valueOf(dslContext.selectCount().from(Tables.TEST)
@@ -289,7 +292,7 @@ public class StatisticsServiceImpl implements StatisticsService {
                         .join(Tables.PATIENT)
                         .on(Tables.PATIENT.ID.eq(Tables.TEST.PATIENT_ID))
                         .and(Tables.TEST_RESULT.DESCRIPTION.lower().trim().eq("positiv"))
-                        .and(Tables.TEST.RESULT_DATE.lessOrEqual(today.getDate()))
+                        .and(Tables.TEST.RESULT_DATE.lessOrEqual(today.getDate().toLocalDate().atTime(LocalTime.MAX.atOffset(ZoneOffset.UTC))))
                         .fetchOne(0,Long.class)));
 
                 dataByDateAndLocation.add(today);
