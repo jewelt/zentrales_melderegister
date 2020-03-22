@@ -1,8 +1,15 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {map} from 'rxjs/operators';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
-import {StatisticsControllerService} from '../../clients/melderegister';
+import {
+  CountryControllerService,
+  CountryDTO,
+  StateControllerService,
+  StateDTO,
+  StatisticsControllerService
+} from '../../clients/melderegister';
 import * as moment from 'moment';
+import {FormBuilder, FormGroup} from '@angular/forms';
 
 @Component({
   selector: 'app-dashboard',
@@ -35,7 +42,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   diagramType = DiagramType;
 
-  // data goes here
+  // Search
+  showSearch = false;
+  states: StateDTO[] = [];
+  countries: CountryDTO[] = [];
+  searchGroup: FormGroup;
+
+  // Diagram Data
   public infectedByState = [];
   public infectedByAge = [];
   public infectedByDay = [];
@@ -46,6 +59,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private timer;
 
   constructor(private breakpointObserver: BreakpointObserver,
+              private fb: FormBuilder,
+              private stateControllerService: StateControllerService,
+              private countryControllerService: CountryControllerService,
               private statisticsControllerService: StatisticsControllerService) {
   }
 
@@ -55,6 +71,28 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.searchGroup = this.fb.group({
+      state: this.fb.control(null),
+      country: this.fb.control({value: null, disabled: true}),
+      dateFrom: this.fb.control(moment().subtract(7, 'days')),
+      dateTill: this.fb.control(moment())
+    });
+    this.searchGroup.get('state').valueChanges.subscribe((newValue: StateDTO) => {
+      const countryControl = this.searchGroup.get('country');
+      if (newValue) {
+        this.countryControllerService.getAllByCountryIdUsingGET1(newValue.id).subscribe(countries => {
+          this.countries = countries;
+          if (this.countries.length === 0) {
+            countryControl.disable();
+          } else {
+            countryControl.enable();
+          }
+        });
+      } else {
+        this.countries = [];
+        countryControl.disable();
+      }
+    });
     this.loadData();
     this.timer = setInterval(() => {
       this.loadData();
@@ -111,6 +149,23 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.statisticsControllerService.getGrowthByStateTodayUsingGET().subscribe(data => {
       this.growthByStateToday = data;
     });
+
+    this.states = [{
+      id: 1,
+      name: 'Niedersachsen',
+    }, {
+      id: 2,
+      name: 'Bremen',
+    }];
+
+    // this.stateControllerService.getStateDTOUsingGET().subscribe(states => {
+    //   this.states = states;
+    // });
+
+  }
+
+  search() {
+
   }
 }
 

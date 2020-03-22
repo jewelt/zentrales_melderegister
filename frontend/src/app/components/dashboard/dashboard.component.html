@@ -1,9 +1,55 @@
 <div class="grid-container">
-  <div style="display: flex;">
-    <h1 class="mat-h1">Dashboard</h1>
+  <!-- Header -->
+  <div style="display: flex; align-items: flex-start">
+    <h1 class="mat-h1" style="margin-right: 15px;">Dashboard</h1>
+    <button mat-button (click)="showSearch = !showSearch">
+      <mat-icon *ngIf="!showSearch">chevron_right</mat-icon>
+      <mat-icon *ngIf="showSearch">expand_more</mat-icon>
+      <span>Erweiterte Suche</span>
+    </button>
     <span style="flex: auto;"></span>
     <span style="margin-top: 5px">{{timestamp}}</span>
   </div>
+
+  <!-- SearchForm -->
+  <form *ngIf="showSearch" class="search-form" [formGroup]="searchGroup">
+    <mat-form-field>
+      <mat-label>Bundesland</mat-label>
+      <mat-select formControlName="state">
+        <mat-option [value]="null">Alle</mat-option>
+        <mat-option *ngFor="let state of states" [value]="state">
+          {{state.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Kreis</mat-label>
+      <mat-select formControlName="country">
+        <mat-option [value]="null">Alle</mat-option>
+        <mat-option *ngFor="let country of countries" [value]="country">
+          {{country.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field style="width: 120px">
+      <mat-label>Datum von</mat-label>
+      <input matInput [matDatepicker]="myDatepicker1" formControlName="dateFrom">
+      <mat-datepicker-toggle matSuffix [for]="myDatepicker1"></mat-datepicker-toggle>
+      <mat-datepicker #myDatepicker1></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field style="width: 120px">
+      <mat-label>Datum bis</mat-label>
+      <input matInput [matDatepicker]="myDatepicker2" formControlName="dateTill">
+      <mat-datepicker-toggle matSuffix [for]="myDatepicker2"></mat-datepicker-toggle>
+      <mat-datepicker #myDatepicker2></mat-datepicker>
+    </mat-form-field>
+    <button mat-raised-button (click)="search()" color="primary">
+      <mat-icon>search</mat-icon>
+      SUCHEN
+    </button>
+  </form>
+
+  <!-- Diagramms -->
   <mat-grid-list cols="2" rowHeight="4:3">
     <mat-grid-tile *ngFor="let card of cards | async" [colspan]="card.cols" [rowspan]="card.rows">
       <mat-card class="dashboard-card">

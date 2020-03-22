@@ -3,9 +3,9 @@ import {map} from 'rxjs/operators';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {
-  CityControllerService,
+  CityControllerService, CountryControllerService,
   LoginRequest,
-  PatientControllerService,
+  PatientControllerService, StateControllerService,
   StatisticsControllerService,
   TestControllerService,
   TestResultControllerService,
@@ -21,6 +21,8 @@ export class AuthService {
   constructor(private http: HttpClient,
               private userJwtApiControllerService: UserJwtApiControllerService,
               private cityControllerService: CityControllerService,
+              private stateControllerService: StateControllerService,
+              private countryControllerService: CountryControllerService,
               private testControllerService: TestControllerService,
               private patientControllerService: PatientControllerService,
               private userAccountApiControllerService: UserAccountApiControllerService,
@@ -76,6 +78,8 @@ export class AuthService {
     this.patientControllerService.configuration.apiKeys = keys;
     this.statisticsControllerService.configuration.apiKeys = keys;
     this.userAccountApiControllerService.configuration.apiKeys = keys;
+    this.stateControllerService.configuration.apiKeys = keys;
+    this.countryControllerService.configuration.apiKeys = keys;
   }
 
 }

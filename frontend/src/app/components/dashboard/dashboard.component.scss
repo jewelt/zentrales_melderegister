@@ -33,3 +33,13 @@ mat-card-content {
   }
 }
 
+.search-form {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 20px;
+  align-items: flex-start;
+
+  mat-form-field {
+    margin-right: 20px;
+  }
+}
