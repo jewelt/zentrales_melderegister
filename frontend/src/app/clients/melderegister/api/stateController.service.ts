@@ -153,6 +153,47 @@ export class StateControllerService {
     }
 
     /**
+     * getAllStates
+     * 
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getAllStatesUsingGET(observe?: 'body', reportProgress?: boolean): Observable<Array<StateDTO>>;
+    public getAllStatesUsingGET(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<StateDTO>>>;
+    public getAllStatesUsingGET(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<StateDTO>>>;
+    public getAllStatesUsingGET(observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
+        let headers = this.defaultHeaders;
+
+        // authentication (JWT) required
+        if (this.configuration.apiKeys["X-Melderegister-Authorization"]) {
+            headers = headers.set('X-Melderegister-Authorization', this.configuration.apiKeys["X-Melderegister-Authorization"]);
+        }
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            '*/*'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+        ];
+
+        return this.httpClient.request<Array<StateDTO>>('get',`${this.basePath}/vi/state`,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
      * getStateDTO
      * 
      * @param stateId state-id

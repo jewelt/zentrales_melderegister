@@ -20,6 +20,8 @@ import { Observable }                                        from 'rxjs';
 import { CountByAge } from '../model/countByAge';
 import { CountByDay } from '../model/countByDay';
 import { CountByState } from '../model/countByState';
+import { DataByDateAndLocation } from '../model/dataByDateAndLocation';
+import { TestResultDistribution } from '../model/testResultDistribution';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
@@ -181,6 +183,70 @@ export class StatisticsControllerService {
     }
 
     /**
+     * getDataByDateAndLocation
+     * 
+     * @param countryId 
+     * @param endDate 
+     * @param startDate 
+     * @param stateId 
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getDataByDateAndLocationUsingGET(countryId?: number, endDate?: string, startDate?: string, stateId?: number, observe?: 'body', reportProgress?: boolean): Observable<Array<DataByDateAndLocation>>;
+    public getDataByDateAndLocationUsingGET(countryId?: number, endDate?: string, startDate?: string, stateId?: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<DataByDateAndLocation>>>;
+    public getDataByDateAndLocationUsingGET(countryId?: number, endDate?: string, startDate?: string, stateId?: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<DataByDateAndLocation>>>;
+    public getDataByDateAndLocationUsingGET(countryId?: number, endDate?: string, startDate?: string, stateId?: number, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
+
+
+
+
+        let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
+        if (countryId !== undefined && countryId !== null) {
+            queryParameters = queryParameters.set('countryId', <any>countryId);
+        }
+        if (endDate !== undefined && endDate !== null) {
+            queryParameters = queryParameters.set('endDate', <any>endDate);
+        }
+        if (startDate !== undefined && startDate !== null) {
+            queryParameters = queryParameters.set('startDate', <any>startDate);
+        }
+        if (stateId !== undefined && stateId !== null) {
+            queryParameters = queryParameters.set('stateId', <any>stateId);
+        }
+
+        let headers = this.defaultHeaders;
+
+        // authentication (JWT) required
+        if (this.configuration.apiKeys["X-Melderegister-Authorization"]) {
+            headers = headers.set('X-Melderegister-Authorization', this.configuration.apiKeys["X-Melderegister-Authorization"]);
+        }
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            '*/*'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+        ];
+
+        return this.httpClient.request<Array<DataByDateAndLocation>>('get',`${this.basePath}/v1/statistic/data-by-date-and-location`,
+            {
+                params: queryParameters,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
      * getGrowthByDay
      * 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
@@ -253,6 +319,87 @@ export class StatisticsControllerService {
         ];
 
         return this.httpClient.request<Array<CountByState>>('get',`${this.basePath}/v1/statistic/growth-by-state-today`,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * getTestResultDistribution
+     * 
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getTestResultDistributionUsingGET(observe?: 'body', reportProgress?: boolean): Observable<Array<TestResultDistribution>>;
+    public getTestResultDistributionUsingGET(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<TestResultDistribution>>>;
+    public getTestResultDistributionUsingGET(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<TestResultDistribution>>>;
+    public getTestResultDistributionUsingGET(observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
+        let headers = this.defaultHeaders;
+
+        // authentication (JWT) required
+        if (this.configuration.apiKeys["X-Melderegister-Authorization"]) {
+            headers = headers.set('X-Melderegister-Authorization', this.configuration.apiKeys["X-Melderegister-Authorization"]);
+        }
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            '*/*'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+        ];
+
+        return this.httpClient.request<Array<TestResultDistribution>>('get',`${this.basePath}/v1/statistic/test-result-distribution`,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * importInfections
+     * 
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public importInfectionsUsingPUT(observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public importInfectionsUsingPUT(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public importInfectionsUsingPUT(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public importInfectionsUsingPUT(observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
+        let headers = this.defaultHeaders;
+
+        // authentication (JWT) required
+        if (this.configuration.apiKeys["X-Melderegister-Authorization"]) {
+            headers = headers.set('X-Melderegister-Authorization', this.configuration.apiKeys["X-Melderegister-Authorization"]);
+        }
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+        ];
+
+        return this.httpClient.request<any>('put',`${this.basePath}/v1/statistic/import`,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
