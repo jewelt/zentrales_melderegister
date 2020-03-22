@@ -1,7 +1,6 @@
 package de.wirvsvirus.zentralesmelderegister.service;
 
-import de.wirvsvirus.zentralesmelderegister.model.TestDTO;
-import de.wirvsvirus.zentralesmelderegister.model.TestPatientTestResultDTO;
+import de.wirvsvirus.zentralesmelderegister.model.*;
 import de.wirvsvirus.zentralesmelderegister.model.jooq.Tables;
 import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.records.TestRecord;
 import de.wirvsvirus.zentralesmelderegister.web.errors.InternalServerErrorException;
@@ -11,6 +10,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Service;
 
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,6 +30,7 @@ public class TestServiceImpl implements TestService {
     private final PatientService patientService;
     private final TestResultService testResultService;
     private final UserAccountService userAccountService;
+    private final DataSource dataSource;
 
     @Override
     public TestDTO createTestDTO(TestDTO testDTO) {
@@ -120,14 +125,53 @@ public class TestServiceImpl implements TestService {
 
     @Override
     public List<TestPatientTestResultDTO> getAllTestsWithPatients() {
+
         final List<TestPatientTestResultDTO> testPatientTestResultDTOS = new ArrayList<>();
 
-        getAllTests().forEach(testDTO -> {
-            final TestPatientTestResultDTO testPatientTestResultDTO = new TestPatientTestResultDTO(testDTO);
-            testPatientTestResultDTO.setPatientDTO(patientService.getPatientDTO(testDTO.getPatientId()));
-            testPatientTestResultDTO.setTestResultDTO(testResultService.getTestResultDTO(testDTO.getTestResultId()));
-            testPatientTestResultDTOS.add(testPatientTestResultDTO);
-        });
+        try (final Connection connection = dataSource.getConnection()) {
+            final ResultSet resultSet = connection.prepareCall("select t.*, p.*, tr.*\n" +
+                    "from test t\n" +
+                    "join patient p on t.\"patient_id\" = p.\"id\"\n" +
+                    "join test_result tr on t.\"test_result_id\" = tr.\"id\";").executeQuery();
+
+            while (resultSet.next()) {
+
+
+                final TestPatientTestResultDTO testPatientTestResultDTO = new TestPatientTestResultDTO();
+                testPatientTestResultDTO.setId(resultSet.getLong(1));
+                if (resultSet.getTimestamp(2) != null) {
+                    testPatientTestResultDTO.setEntryDate(resultSet.getTimestamp(2).toLocalDateTime().atOffset(ZoneOffset.UTC));
+                }
+                if (resultSet.getTimestamp(3) != null) {
+                    testPatientTestResultDTO.setTestDate(resultSet.getTimestamp(3).toLocalDateTime().atOffset(ZoneOffset.UTC));
+                }
+                if (resultSet.getTimestamp(4) != null) {
+                    testPatientTestResultDTO.setResultDate(resultSet.getTimestamp(4).toLocalDateTime().atOffset(ZoneOffset.UTC));
+                }
+                testPatientTestResultDTO.setTestResultId(resultSet.getLong(5));
+                testPatientTestResultDTO.setPatientId(resultSet.getLong(6));
+
+                final PatientDTO patientDTO = new PatientDTO();
+                patientDTO.setId(resultSet.getLong(7));
+                patientDTO.setBirthday(resultSet.getDate(8).toLocalDate());
+                patientDTO.setCityId(resultSet.getLong(9));
+
+                testPatientTestResultDTO.setPatientDTO(patientDTO);
+
+
+                final TestResultDTO testResultDTO = new TestResultDTO();
+                testResultDTO.setId(resultSet.getLong(11));
+                testResultDTO.setDescription(resultSet.getString(12));
+
+                testPatientTestResultDTO.setTestResultDTO(testResultDTO);
+
+
+                testPatientTestResultDTOS.add(testPatientTestResultDTO);
+            }
+        } catch (SQLException e) {
+            log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
         return testPatientTestResultDTOS;
     }
 }

@@ -21,4 +21,6 @@ public interface StatisticsService {
     TestCaseDistribution getTestCaseDistribution();
 
     List<DataByDateAndLocation> getDataByDateAndLocation(SearchRequestDTO searchRequestDTO);
+
+    void importInfections();
 }

@@ -1,13 +1,19 @@
 package de.wirvsvirus.zentralesmelderegister.service;
 
+import de.wirvsvirus.zentralesmelderegister.model.CountryDTO;
 import de.wirvsvirus.zentralesmelderegister.model.StateDTO;
 import de.wirvsvirus.zentralesmelderegister.model.jooq.Tables;
+import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.records.CountryRecord;
+import de.wirvsvirus.zentralesmelderegister.model.jooq.tables.records.StateRecord;
 import de.wirvsvirus.zentralesmelderegister.web.errors.InternalServerErrorException;
 import de.wirvsvirus.zentralesmelderegister.web.errors.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -79,5 +85,14 @@ public class StateServiceImpl implements StateService{
                     "Could not update State with id "+stateDTO.getId()
             );
         }
+    }
+
+    @Override
+    public List<StateDTO> getAllStates() {
+        log.debug("get all states");
+        return this.dslContext.select().from(Tables.STATE)
+                .fetchInto(StateRecord.class)
+                .stream().map(StateDTO::new)
+                .collect(Collectors.toList());
     }
 }

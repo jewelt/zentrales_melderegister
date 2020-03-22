@@ -1,10 +1,13 @@
 package de.wirvsvirus.zentralesmelderegister.controller;
 
+import de.wirvsvirus.zentralesmelderegister.model.CountryDTO;
 import de.wirvsvirus.zentralesmelderegister.model.StateDTO;
 import de.wirvsvirus.zentralesmelderegister.service.StateService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @AllArgsConstructor
@@ -35,5 +38,11 @@ public class StateController {
     public void deleteState(@PathVariable("state-id") long stateId){
         log.debug("request to delete state with id " + stateId);
         this.stateService.deleteStateDTO(stateId);
+    }
+
+    @GetMapping("/state")
+    public List<StateDTO> getAllStates() {
+        log.debug("request to get all states");
+        return this.stateService.getAllStates();
     }
 }

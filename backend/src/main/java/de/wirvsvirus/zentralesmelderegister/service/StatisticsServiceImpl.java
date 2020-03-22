@@ -1,6 +1,7 @@
 package de.wirvsvirus.zentralesmelderegister.service;
 
 import de.wirvsvirus.zentralesmelderegister.model.*;
+import de.wirvsvirus.zentralesmelderegister.model.*;
 import de.wirvsvirus.zentralesmelderegister.model.jooq.Tables;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,12 +10,18 @@ import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;
 import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.*;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 @AllArgsConstructor
@@ -26,6 +33,8 @@ public class StatisticsServiceImpl implements StatisticsService {
 
 
     private final DataSource dataSource;
+    private final PatientService patientService;
+    private final TestService testService;
     private final DSLContext dslContext;
 
     @Override
@@ -40,13 +49,14 @@ public class StatisticsServiceImpl implements StatisticsService {
                     "join \"country\" c3 on c2.\"country_id\" = c3.\"id\"\n" +
                     "join \"state\" s on c3.\"state_id\" = s.\"id\"\n" +
                     "where tr.description = 'positiv'\n" +
-                    "group by s.id, s.name, p.id;").executeQuery();
+                    "group by s.id, s.name;").executeQuery();
 
             while (resultSet.next()) {
                 countByStates.add(new CountByState(resultSet.getString(2), resultSet.getBigDecimal(3)));
             }
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
         }
 
         return countByStates;
@@ -71,7 +81,7 @@ public class StatisticsServiceImpl implements StatisticsService {
                     "         join \"country\" c3 on c2.\"country_id\" = c3.\"id\"\n" +
                     "         join \"state\" s on c3.\"state_id\" = s.\"id\"\n" +
                     "where tr.description = 'positiv'\n" +
-                    "group by to_char(t.result_date, 'yyyy-mm-dd'), p.id\n" +
+                    "group by to_char(t.result_date, 'yyyy-mm-dd')\n" +
                     "order by 1 desc;").executeQuery();
 
             while (resultSet.next()) {
@@ -79,6 +89,7 @@ public class StatisticsServiceImpl implements StatisticsService {
             }
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
         }
 
         return growthByDates;
@@ -96,7 +107,7 @@ public class StatisticsServiceImpl implements StatisticsService {
                     "         join \"country\" c3 on c2.\"country_id\" = c3.\"id\"\n" +
                     "         join \"state\" s on c3.\"state_id\" = s.\"id\"\n" +
                     "where tr.description = 'positiv'\n" +
-                    "group by to_char(t.result_date, 'yyyy-mm-dd'), p.id\n" +
+                    "group by to_char(t.result_date, 'yyyy-mm-dd')\n" +
                     "order by 1 asc;").executeQuery();
             BigDecimal sumCounter = BigDecimal.ZERO;
             while (resultSet.next()) {
@@ -106,6 +117,7 @@ public class StatisticsServiceImpl implements StatisticsService {
             }
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
         }
 
         return growthByDates;
@@ -123,7 +135,7 @@ public class StatisticsServiceImpl implements StatisticsService {
                     "         join \"country\" c3 on c2.\"country_id\" = c3.\"id\"\n" +
                     "         join \"state\" s on c3.\"state_id\" = s.\"id\"\n" +
                     "where tr.description = 'positiv'\n" +
-                    "group by extract(year FROM age(p.birthday)), p.id\n" +
+                    "group by extract(year FROM age(p.birthday))\n" +
                     "order by 1 desc;").executeQuery();
 
             while (resultSet.next()) {
@@ -131,6 +143,7 @@ public class StatisticsServiceImpl implements StatisticsService {
             }
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
         }
 
         return countByStates;
@@ -155,6 +168,7 @@ public class StatisticsServiceImpl implements StatisticsService {
             }
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
         }
 
         return testResultDistribution;
@@ -225,6 +239,76 @@ public class StatisticsServiceImpl implements StatisticsService {
     }
 
 
+    @Override
+    public void importInfections() {
+        try (final Connection connection = dataSource.getConnection()) {
+            final ResultSet resultSet = connection.prepareCall("select ci.infections, city.id, test_result.id\n" +
+                    "from current_infections ci\n" +
+                    "join country c on trim(lower(c.name)) = trim(lower(ci.gen))\n" +
+                    "    join city on c.\"id\" = \"city\".\"country_id\"\n" +
+                    "join test_result on test_result.description = 'positiv'").executeQuery();
+
+
+            while (resultSet.next()) {
+
+                final long infectionsInCity = resultSet.getLong(1);
+                final long cityId = resultSet.getLong(2);
+                final long testResultId = resultSet.getLong(3);
+
+                log.debug("Inserting " + infectionsInCity + " tests in city " + cityId);
+
+                int summeInCity = 0;
+                for (int i = 2; i <= 31; i++) {
+                    final int infectionsAtDay = (int) ((0.01 * Math.pow(1.16591, i) - 0.01 * Math.pow(1.16591, i - 1)) * infectionsInCity);
+
+//                    log.debug("infections per day: " + i + ": " + infectionsAtDay);
+
+                    summeInCity = summeInCity + infectionsAtDay;
+
+                    for (int j = 0; j < infectionsAtDay; j++) {
+                        final LocalDate randomBirthday = randomDate(LocalDate.parse("1930-03-22").atStartOfDay().toInstant(ZoneOffset.UTC),
+                                LocalDate.parse("2020-03-21").atStartOfDay().toInstant(ZoneOffset.UTC));
+
+                        final LocalDate testDate = LocalDate.now().minusDays(31 - i);
+
+                        final PatientDTO patientDTO = new PatientDTO();
+                        patientDTO.setBirthday(randomBirthday);
+                        patientDTO.setCityId(cityId);
+
+                        final PatientDTO createdPatient = patientService.createPatientDTO(patientDTO);
+
+
+                        final TestDTO testDTO = new TestDTO();
+                        testDTO.setEntryDate(testDate.atTime(OffsetTime.now()));
+                        testDTO.setResultDate(testDate.atTime(OffsetTime.now()));
+                        testDTO.setTestDate(testDate.atTime(OffsetTime.now()));
+                        testDTO.setPatientId(createdPatient.getId());
+                        testDTO.setTestResultId(testResultId);
+
+                        testService.createTestDTO(testDTO);
+
+                    }
+                }
+                log.debug("Verlgeich " + summeInCity);
+
+
+            }
+        } catch (SQLException e) {
+            log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    private LocalDate randomDate(Instant startInclusive, Instant endExclusive) {
+        long startSeconds = startInclusive.getEpochSecond();
+        long endSeconds = endExclusive.getEpochSecond();
+        long random = ThreadLocalRandom
+                .current()
+                .nextLong(startSeconds, endSeconds);
+
+        return Instant.ofEpochSecond(random).atZone(ZoneId.systemDefault()).toLocalDate();
+    }
+
     private List<CountByState> getGrowthByStateToday(String dateParam) {
         final List<CountByState> countByStates = new ArrayList<>();
         try (final Connection connection = dataSource.getConnection()) {
@@ -237,7 +321,7 @@ public class StatisticsServiceImpl implements StatisticsService {
                     "join \"state\" s on c3.\"state_id\" = s.\"id\"\n" +
                     "where tr.description = 'positiv'\n" +
                     "and to_char(t.result_date, 'yyyy-mm-dd') = ?\n" +
-                    "group by s.id, s.name, p.id");
+                    "group by s.id, s.name");
 
             preparedStatement.setString(1, dateParam);
 
@@ -248,6 +332,7 @@ public class StatisticsServiceImpl implements StatisticsService {
             }
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
         }
         return countByStates;
     }
