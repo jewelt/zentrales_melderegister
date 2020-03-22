@@ -3,6 +3,7 @@ package de.wirvsvirus.zentralesmelderegister.service;
 import de.wirvsvirus.zentralesmelderegister.model.CountByAge;
 import de.wirvsvirus.zentralesmelderegister.model.CountByDay;
 import de.wirvsvirus.zentralesmelderegister.model.CountByState;
+import de.wirvsvirus.zentralesmelderegister.model.TestResultDistribution;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -127,6 +128,30 @@ public class StatisticsServiceImpl implements StatisticsService {
         }
 
         return countByStates;
+    }
+
+    @Override
+    public List<TestResultDistribution> getTestResultDistribution() {
+        final List<TestResultDistribution> testResultDistribution = new ArrayList<>();
+        try (final Connection connection = dataSource.getConnection()) {
+            final ResultSet resultSet = connection.prepareCall("select tr.description,  count(*)\n" +
+                    "from test t\n" +
+                    "         join test_result tr on tr.id = t.test_result_id\n" +
+                    "         join \"patient\" p on t.\"patient_id\" = p.\"id\"\n" +
+                    "         join \"city\" c2 on p.\"city_id\" = c2.\"id\"\n" +
+                    "         join \"country\" c3 on c2.\"country_id\" = c3.\"id\"\n" +
+                    "         join \"state\" s on c3.\"state_id\" = s.\"id\"\n" +
+                    "group by tr.description\n" +
+                    "order by 1 desc;").executeQuery();
+
+            while (resultSet.next()) {
+                testResultDistribution.add(new TestResultDistribution(resultSet.getString(1), resultSet.getBigDecimal(2)));
+            }
+        } catch (SQLException e) {
+            log.error(e.getMessage(), e);
+        }
+
+        return testResultDistribution;
     }
 
     private List<CountByState> getGrowthByStateToday(String dateParam) {
