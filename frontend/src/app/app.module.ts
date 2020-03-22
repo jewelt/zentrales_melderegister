@@ -16,7 +16,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatInputModule} from '@angular/material/input';
-import {HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {DashboardComponent} from './components/dashboard/dashboard.component';
 import {MatGridListModule} from '@angular/material/grid-list';
 import {MatMenuModule} from '@angular/material/menu';
@@ -31,12 +31,14 @@ import {SimplemattableModule} from 'simplemattable';
 import {ApiModule, BASE_PATH} from './clients/melderegister';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatMomentDateModule, MomentDateAdapter} from '@angular/material-moment-adapter';
-import { TimepickerComponent } from './components/timepicker/timepicker.component';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
-import { TestListAllComponent } from './components/test-list-all/test-list-all.component';
+import {TimepickerComponent} from './components/timepicker/timepicker.component';
+import {NgxChartsModule} from '@swimlane/ngx-charts';
+import {TestListAllComponent} from './components/test-list-all/test-list-all.component';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatTooltipModule} from '@angular/material/tooltip';
-import { LoginComponent } from './components/login/login.component';
+import {LoginComponent} from './components/login/login.component';
+import {MatProgressBarModule} from "@angular/material/progress-bar";
+import {LoadingInterceptor} from "./interceptor/loading-interceptor";
 
 @NgModule({
   declarations: [
@@ -81,7 +83,8 @@ import { LoginComponent } from './components/login/login.component';
     MatSnackBarModule,
     ApiModule,
     MatAutocompleteModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatProgressBarModule
   ],
   providers: [
     {
@@ -107,6 +110,11 @@ import { LoginComponent } from './components/login/login.component';
         },
       },
     },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: LoadingInterceptor,
+      multi: true
+    }
   ],
   bootstrap: [AppComponent]
 })
