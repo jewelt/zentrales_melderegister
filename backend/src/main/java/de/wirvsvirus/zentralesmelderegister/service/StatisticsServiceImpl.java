@@ -33,7 +33,7 @@ public class StatisticsServiceImpl implements StatisticsService {
                     "join \"country\" c3 on c2.\"country_id\" = c3.\"id\"\n" +
                     "join \"state\" s on c3.\"state_id\" = s.\"id\"\n" +
                     "where tr.description = 'positiv'\n" +
-                    "group by s.id, s.name;").executeQuery();
+                    "group by s.id, s.name, p.id;").executeQuery();
 
             while (resultSet.next()) {
                 countByStates.add(new CountByState(resultSet.getString(2), resultSet.getBigDecimal(3)));
@@ -64,7 +64,7 @@ public class StatisticsServiceImpl implements StatisticsService {
                     "         join \"country\" c3 on c2.\"country_id\" = c3.\"id\"\n" +
                     "         join \"state\" s on c3.\"state_id\" = s.\"id\"\n" +
                     "where tr.description = 'positiv'\n" +
-                    "group by to_char(t.result_date, 'yyyy-mm-dd')\n" +
+                    "group by to_char(t.result_date, 'yyyy-mm-dd'), p.id\n" +
                     "order by 1 desc;").executeQuery();
 
             while (resultSet.next()) {
@@ -89,7 +89,7 @@ public class StatisticsServiceImpl implements StatisticsService {
                     "         join \"country\" c3 on c2.\"country_id\" = c3.\"id\"\n" +
                     "         join \"state\" s on c3.\"state_id\" = s.\"id\"\n" +
                     "where tr.description = 'positiv'\n" +
-                    "group by to_char(t.result_date, 'yyyy-mm-dd')\n" +
+                    "group by to_char(t.result_date, 'yyyy-mm-dd'), p.id\n" +
                     "order by 1 asc;").executeQuery();
             BigDecimal sumCounter = BigDecimal.ZERO;
             while (resultSet.next()) {
@@ -116,7 +116,7 @@ public class StatisticsServiceImpl implements StatisticsService {
                     "         join \"country\" c3 on c2.\"country_id\" = c3.\"id\"\n" +
                     "         join \"state\" s on c3.\"state_id\" = s.\"id\"\n" +
                     "where tr.description = 'positiv'\n" +
-                    "group by extract(year FROM age(p.birthday))\n" +
+                    "group by extract(year FROM age(p.birthday)), p.id\n" +
                     "order by 1 desc;").executeQuery();
 
             while (resultSet.next()) {
@@ -141,7 +141,7 @@ public class StatisticsServiceImpl implements StatisticsService {
                     "join \"state\" s on c3.\"state_id\" = s.\"id\"\n" +
                     "where tr.description = 'positiv'\n" +
                     "and to_char(t.result_date, 'yyyy-mm-dd') = ?\n" +
-                    "group by s.id, s.name");
+                    "group by s.id, s.name, p.id");
 
             preparedStatement.setString(1, dateParam);
 
