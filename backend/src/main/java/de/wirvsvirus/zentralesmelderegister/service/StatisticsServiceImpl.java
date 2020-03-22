@@ -3,6 +3,7 @@ package de.wirvsvirus.zentralesmelderegister.service;
 import de.wirvsvirus.zentralesmelderegister.model.CountByAge;
 import de.wirvsvirus.zentralesmelderegister.model.CountByDay;
 import de.wirvsvirus.zentralesmelderegister.model.CountByState;
+import de.wirvsvirus.zentralesmelderegister.model.TestResultDistribution;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -33,7 +34,7 @@ public class StatisticsServiceImpl implements StatisticsService {
                     "join \"country\" c3 on c2.\"country_id\" = c3.\"id\"\n" +
                     "join \"state\" s on c3.\"state_id\" = s.\"id\"\n" +
                     "where tr.description = 'positiv'\n" +
-                    "group by s.id, s.name;").executeQuery();
+                    "group by s.id, s.name, p.id;").executeQuery();
 
             while (resultSet.next()) {
                 countByStates.add(new CountByState(resultSet.getString(2), resultSet.getBigDecimal(3)));
@@ -64,7 +65,7 @@ public class StatisticsServiceImpl implements StatisticsService {
                     "         join \"country\" c3 on c2.\"country_id\" = c3.\"id\"\n" +
                     "         join \"state\" s on c3.\"state_id\" = s.\"id\"\n" +
                     "where tr.description = 'positiv'\n" +
-                    "group by to_char(t.result_date, 'yyyy-mm-dd')\n" +
+                    "group by to_char(t.result_date, 'yyyy-mm-dd'), p.id\n" +
                     "order by 1 desc;").executeQuery();
 
             while (resultSet.next()) {
@@ -89,7 +90,7 @@ public class StatisticsServiceImpl implements StatisticsService {
                     "         join \"country\" c3 on c2.\"country_id\" = c3.\"id\"\n" +
                     "         join \"state\" s on c3.\"state_id\" = s.\"id\"\n" +
                     "where tr.description = 'positiv'\n" +
-                    "group by to_char(t.result_date, 'yyyy-mm-dd')\n" +
+                    "group by to_char(t.result_date, 'yyyy-mm-dd'), p.id\n" +
                     "order by 1 asc;").executeQuery();
             BigDecimal sumCounter = BigDecimal.ZERO;
             while (resultSet.next()) {
@@ -116,7 +117,7 @@ public class StatisticsServiceImpl implements StatisticsService {
                     "         join \"country\" c3 on c2.\"country_id\" = c3.\"id\"\n" +
                     "         join \"state\" s on c3.\"state_id\" = s.\"id\"\n" +
                     "where tr.description = 'positiv'\n" +
-                    "group by extract(year FROM age(p.birthday))\n" +
+                    "group by extract(year FROM age(p.birthday)), p.id\n" +
                     "order by 1 desc;").executeQuery();
 
             while (resultSet.next()) {
@@ -127,6 +128,30 @@ public class StatisticsServiceImpl implements StatisticsService {
         }
 
         return countByStates;
+    }
+
+    @Override
+    public List<TestResultDistribution> getTestResultDistribution() {
+        final List<TestResultDistribution> testResultDistribution = new ArrayList<>();
+        try (final Connection connection = dataSource.getConnection()) {
+            final ResultSet resultSet = connection.prepareCall("select tr.description,  count(*)\n" +
+                    "from test t\n" +
+                    "         join test_result tr on tr.id = t.test_result_id\n" +
+                    "         join \"patient\" p on t.\"patient_id\" = p.\"id\"\n" +
+                    "         join \"city\" c2 on p.\"city_id\" = c2.\"id\"\n" +
+                    "         join \"country\" c3 on c2.\"country_id\" = c3.\"id\"\n" +
+                    "         join \"state\" s on c3.\"state_id\" = s.\"id\"\n" +
+                    "group by tr.description\n" +
+                    "order by 1 desc;").executeQuery();
+
+            while (resultSet.next()) {
+                testResultDistribution.add(new TestResultDistribution(resultSet.getString(1), resultSet.getBigDecimal(2)));
+            }
+        } catch (SQLException e) {
+            log.error(e.getMessage(), e);
+        }
+
+        return testResultDistribution;
     }
 
     private List<CountByState> getGrowthByStateToday(String dateParam) {
@@ -141,7 +166,7 @@ public class StatisticsServiceImpl implements StatisticsService {
                     "join \"state\" s on c3.\"state_id\" = s.\"id\"\n" +
                     "where tr.description = 'positiv'\n" +
                     "and to_char(t.result_date, 'yyyy-mm-dd') = ?\n" +
-                    "group by s.id, s.name");
+                    "group by s.id, s.name, p.id");
 
             preparedStatement.setString(1, dateParam);
 

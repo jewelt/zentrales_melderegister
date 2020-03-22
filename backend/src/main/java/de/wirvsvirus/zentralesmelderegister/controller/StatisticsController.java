@@ -3,6 +3,7 @@ package de.wirvsvirus.zentralesmelderegister.controller;
 import de.wirvsvirus.zentralesmelderegister.model.CountByAge;
 import de.wirvsvirus.zentralesmelderegister.model.CountByDay;
 import de.wirvsvirus.zentralesmelderegister.model.CountByState;
+import de.wirvsvirus.zentralesmelderegister.model.TestResultDistribution;
 import de.wirvsvirus.zentralesmelderegister.service.StatisticsService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,6 +49,12 @@ public class StatisticsController {
 //    @PreAuthorize("hasAuthority('ADMIN')")
     public List<CountByState> getGrowthByStateToday() {
         return statisticsService.getGrowthByStateToday();
+    }
+
+    @GetMapping("/statistic/test-result-distribution")
+//    @PreAuthorize("hasAuthority('ADMIN')")
+    public List<TestResultDistribution> getTestResultDistribution() {
+        return statisticsService.getTestResultDistribution();
     }
 
 }
