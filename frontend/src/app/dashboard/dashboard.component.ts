@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {map} from 'rxjs/operators';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 import {StatisticsControllerService} from '../clients/melderegister';
@@ -9,7 +9,7 @@ import * as moment from 'moment';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
   // based on the screen size, switch from standard to one column per row
   cards = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
     map(({matches}) => {
@@ -43,6 +43,8 @@ export class DashboardComponent implements OnInit {
   public growthByStateToday = [];
   public timestamp: string;
 
+  private timer;
+
   constructor(private breakpointObserver: BreakpointObserver,
               private statisticsControllerService: StatisticsControllerService) {
   }
@@ -54,9 +56,13 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadData();
-    setInterval(() => {
+    this.timer = setInterval(() => {
       this.loadData();
     }, 60000);
+  }
+
+  ngOnDestroy(): void {
+    clearInterval(this.timer);
   }
 
   private loadData() {

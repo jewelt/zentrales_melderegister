@@ -21,8 +21,8 @@ export class TimepickerComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.formControlHour = this.fb.control(moment().hour());
-    this.formControlMinute = this.fb.control(moment().minute());
+    this.formControlHour = this.fb.control(this.numberToString(moment().hour()));
+    this.formControlMinute = this.fb.control(this.numberToString(moment().minute()));
 
     this.formControlHour.valueChanges.subscribe((newValue) => {
       if (newValue.length === 2) {
@@ -34,6 +34,14 @@ export class TimepickerComponent implements OnInit {
     this.formControlMinute.valueChanges.subscribe(() => {
       this.updateTime();
     });
+  }
+
+  private numberToString(value: number): string {
+    if (value < 10) {
+      return '0' + value;
+    } else {
+      return value.toString();
+    }
   }
 
   updateTime() {

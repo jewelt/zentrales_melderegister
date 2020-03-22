@@ -34,6 +34,9 @@ import {MatMomentDateModule, MomentDateAdapter} from '@angular/material-moment-a
 import { TimepickerComponent } from './timepicker/timepicker.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { TabelleComponent } from './tabelle/tabelle.component';
+import {MatAutocompleteModule} from "@angular/material/autocomplete";
+import {MatTooltipModule} from "@angular/material/tooltip";
+import { LoginComponent } from './login/login.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +46,8 @@ import { TabelleComponent } from './tabelle/tabelle.component';
     ErfassungComponent,
     TestListComponent,
     TimepickerComponent,
-    TabelleComponent
+    TabelleComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -75,7 +79,9 @@ import { TabelleComponent } from './tabelle/tabelle.component';
     MatSelectModule,
     SimplemattableModule,
     MatSnackBarModule,
-    ApiModule
+    ApiModule,
+    MatAutocompleteModule,
+    MatTooltipModule
   ],
   providers: [
     {

@@ -4,6 +4,7 @@ import {
   CityControllerService,
   CityDTO,
   PatientControllerService,
+  PatientDTO,
   TestControllerService,
   TestResultControllerService,
   TestResultDTO
@@ -22,6 +23,8 @@ export class ErfassungComponent implements OnInit {
   result: string;
   testResults: TestResultDTO[] = [];
   cities: CityDTO[] = [];
+  patients: PatientDTO[] = [];
+  isNew = true;
 
   constructor(private fb: FormBuilder,
               private patientControllerService: PatientControllerService,
@@ -32,16 +35,8 @@ export class ErfassungComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.testResultControllerService.getAllTestResultsUsingGET().subscribe((testResults) => {
-      this.testResults = testResults;
-    });
-    this.cityControllerService.getAllCitiesByUserUsingGET().subscribe(cities => {
-      this.cities = cities;
-    });
-
-
     this.formGroup = this.fb.group({
-      birthdate: this.fb.control('', Validators.required),
+      birthdate: this.fb.control(''),
       doctor: this.fb.control('', Validators.required),
       testdate: this.fb.control(moment(), Validators.required),
       testtime: this.fb.control(moment().hour() + ':' + moment().minute()),
@@ -49,6 +44,27 @@ export class ErfassungComponent implements OnInit {
       resulttime: this.fb.control(moment().hour() + ':' + moment().minute()),
       testresult: this.fb.control('', Validators.required),
       city: this.fb.control('', Validators.required),
+      patientid: this.fb.control(null),
+    });
+
+    this.patientControllerService.getAllPatientsUsingGET().subscribe(patients => {
+      this.patients = patients.sort((a, b) => {
+        if (a.id > b.id) {
+          return -1;
+        } else if (a.id < b.id) {
+          return 1;
+        } else {
+          return 0;
+        }
+      });
+    });
+
+    this.testResultControllerService.getAllTestResultsUsingGET().subscribe((testResults) => {
+      this.testResults = testResults;
+    });
+    this.cityControllerService.getAllCitiesByUserUsingGET().subscribe(cities => {
+      this.cities = cities;
+      this.formGroup.get('city').patchValue(cities[0]);
     });
   }
 
@@ -66,6 +82,14 @@ export class ErfassungComponent implements OnInit {
     const resulttime = this.formGroup.get('resulttime').value as string;
     const testresult = this.formGroup.get('testresult').value as TestResultDTO;
     const city = this.formGroup.get('city').value as CityDTO;
+    const patientid = this.formGroup.get('patientid').value as string;
+
+    if (this.isNew && !birthday) {
+      return;
+    }
+    if (!this.isNew && !patientid) {
+      return;
+    }
 
     testdate.hour(+(testtime.split(':')[0]));
     testdate.minute(+(testtime.split(':')[1]));
@@ -73,37 +97,45 @@ export class ErfassungComponent implements OnInit {
     resultdate.hour(+(resulttime.split(':')[0]));
     resultdate.minute(+(resulttime.split(':')[1]));
 
-    console.log(birthday.toISOString(true));
-    console.log(doctor);
-    console.log(testdate.toISOString(true));
-    console.log(resultdate.toISOString(true));
-    console.log(testresult);
-
-    this.patientControllerService.createPatientUsingPOST({
-      birthday: birthday.toISOString(true).substring(0, 10),
-      cityId: city.id
-    }).subscribe(patient => {
-      this.testControllerService.createTestUsingPOST({
-        entryDate: moment().toISOString(true),
-        patientId: patient.id,
-        resultDate: resultdate.toISOString(true),
-        testDate: testdate.toISOString(true),
-        testResultId: testresult.id
-      }).subscribe((test) => {
-        this.matSnackBar.open('Test ' + test.id + ' angelegt', 'OK', {
-          duration: 3000
-        });
+    if (this.isNew) { // new
+      this.patientControllerService.createPatientUsingPOST({
+        birthday: birthday.toISOString(true).substring(0, 10),
+        cityId: city.id
+      }).subscribe(patient => {
+        this.patients.unshift(patient);
+        this.createTest(patient, resultdate, testdate, testresult);
       }, error => {
         this.matSnackBar.open('Test konnte nicht angelegt werden', 'OK', {
           duration: 3000
         });
+      });
+    } else { // existing
+      const patient = this.patients.find(patientFind => patientFind.id === +patientid);
+      if (!patient) {
+        return;
+      }
+      this.createTest(patient, resultdate, testdate, testresult);
+    }
+
+  }
+
+  private createTest(patient: PatientDTO, resultdate: moment.Moment, testdate: moment.Moment, testresult: TestResultDTO) {
+    this.testControllerService.createTestUsingPOST({
+      entryDate: moment().toISOString(true),
+      patientId: patient.id,
+      resultDate: resultdate.toISOString(true),
+      testDate: testdate.toISOString(true),
+      testResultId: testresult.id
+    }).subscribe((test) => {
+      this.matSnackBar.open('Test ' + test.id + ' angelegt', 'OK', {
+        duration: 3000
       });
     }, error => {
       this.matSnackBar.open('Test konnte nicht angelegt werden', 'OK', {
         duration: 3000
       });
     });
-
   }
+
 
 }

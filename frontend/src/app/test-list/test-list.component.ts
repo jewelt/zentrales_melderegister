@@ -23,8 +23,11 @@ export class TestListComponent implements OnInit {
 
   ngOnInit() {
     this.columns = [
+      new TableColumn<TestPatientTestResultDTO, 'id'>('Fallnummer', 'id'),
       new TableColumn<TestPatientTestResultDTO, 'patientDTO'>('Geburtsdatum', 'patientDTO')
         .withTransform(patient => patient.birthday),
+      new TableColumn<TestPatientTestResultDTO, 'patientDTO'>('Patientennummer', 'patientDTO')
+        .withTransform(patient => patient.id.toString()),
       new TableColumn<TestPatientTestResultDTO, 'testDate'>('Testdatum', 'testDate')
         .withTransform(testDate => moment(testDate).format(this.dateFormat)),
       new TableColumn<TestPatientTestResultDTO, 'resultDate'>('Ergebnisdatum', 'resultDate')

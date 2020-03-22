@@ -1,7 +1,27 @@
 <div class="erfassung-form-container">
   <form [formGroup]="formGroup" class="erfassung-form mat-elevation-z2" (ngSubmit)="onSave()">
     <h1 class="mat-h1">Erfassung</h1>
-    <mat-form-field>
+    <mat-radio-group aria-label="Select an option" [(ngModel)]="isNew" [ngModelOptions]="{standalone: true}"
+                     style="margin-bottom: 15px">
+      <mat-radio-button [value]="true" style="margin-right: 15px">Neu</mat-radio-button>
+      <mat-radio-button [value]="false">Bestehend</mat-radio-button>
+    </mat-radio-group>
+    <mat-form-field *ngIf="!isNew">
+      <mat-label>Fallnummer</mat-label>
+      <input matInput
+             placeholder="Patientennummer (optional)"
+             aria-label="Patientennummer"
+             [matAutocomplete]="auto"
+             formControlName="patientid">
+      <mat-autocomplete #auto="matAutocomplete">
+        <mat-option *ngFor="let patient of patients" [value]="patient.id">
+          <div style="display: flex">
+            <span style="flex: 0 0 50px">{{patient.id}}</span> ({{patient.birthday}})
+          </div>
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+    <mat-form-field *ngIf="isNew">
       <mat-label>Geburtstag</mat-label>
       <input matInput [matDatepicker]="myDatepicker" formControlName="birthdate">
       <mat-datepicker-toggle matSuffix [for]="myDatepicker"></mat-datepicker-toggle>

@@ -1,0 +1,40 @@
+.login-container {
+  height: calc(100vh - 64px);
+  box-sizing: border-box;
+  overflow: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1 1 auto;
+  flex-direction: column;
+  padding-top: 75px;
+}
+
+.login-card {
+  width: 400px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  max-width: 80%;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.mat-h1 {
+  color: #3f51b5;
+  font-size: 48px;
+  font-weight: bold;
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .mat-h1 {
+    font-size: 32px;
+  }
+
+  .login-container {
+    height: calc(100vh - 56px);
+  }
+}

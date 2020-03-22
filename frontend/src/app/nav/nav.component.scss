@@ -11,11 +11,6 @@
   background: rgba(0, 0, 0, 0.125);
 }
 
-.login-form {
-  display: flex;
-  flex-direction: column;
-}
-
 .toolbar {
   display: flex;
 
@@ -26,22 +21,4 @@
 
 .active-link {
   background: rgba(0, 0, 0, 0.2);
-}
-
-
-.login-container {
-  overflow: auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: 1 1 auto;
-  flex-direction: column;
-  padding-top: 75px;
-}
-
-.login-card {
-  width: 400px;
-  margin-top: 30px;
-  margin-bottom: 30px;
-  max-width: 80%;
 }

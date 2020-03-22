@@ -48,44 +48,5 @@
 </mat-sidenav-container>
 
 <ng-template #unauthenticated>
-  <mat-toolbar color="primary" style="z-index: 99;" class="mat-elevation-z5">
-    Zentrales Melderegister
-  </mat-toolbar>
-  <main>
-    <div class="login-container">
-      <h1 class="mat-h1" style="color: #3f51b5; font-size: 48px; font-weight: bold">Zentrales Melderegister</h1>
-      <!--Login-Form-->
-      <mat-card class="login-card mat-elevation-z5">
-        <mat-card-header>
-          <mat-card-title><h1 class="mat-headline" style="color: dimgray">Login</h1></mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-
-          <form [formGroup]="loginForm" (ngSubmit)="login()">
-            <div class="login-form" *ngIf="!loadingLogin">
-              <mat-form-field>
-                <input matInput type="text" placeholder="Benutzername" formControlName="email">
-              </mat-form-field>
-
-
-              <mat-form-field>
-                <input matInput type="password" placeholder="Password" formControlName="password">
-              </mat-form-field>
-
-              <div style="padding-bottom: 10px; display: flex">
-                <mat-checkbox formControlName="stayLoggedIn">Stay logged in</mat-checkbox>
-              </div>
-
-              <button mat-raised-button color="primary">Login</button>
-            </div>
-            <div style="display: flex;justify-content: center;" *ngIf="loadingLogin">
-              <mat-spinner [mode]="'indeterminate'"></mat-spinner>
-            </div>
-            <div *ngIf="isLoginErrorVisible">{{errorLogin}}</div>
-          </form>
-        </mat-card-content>
-      </mat-card>
-      <img src="assets/Logo_Projekt_01.png" style="width: 600px; max-width: 100%">
-    </div>
-  </main>
+  <app-login></app-login>
 </ng-template>

@@ -14,10 +14,6 @@ import {UserAccountApiControllerService} from '../clients/melderegister';
 })
 export class NavComponent implements OnInit {
 
-  loadingLogin = false;
-  errorLogin = '';
-  isLoginErrorVisible = false;
-
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
       map(result => result.matches),
@@ -25,11 +21,6 @@ export class NavComponent implements OnInit {
     );
   authenticated$: Observable<boolean> = this.authenticationService.authenticated$;
 
-  loginForm = new FormGroup({
-    email: new FormControl('', [Validators.required]),
-    password: new FormControl('', Validators.required),
-    stayLoggedIn: new FormControl(false),
-  });
 
   isUser = false;
   isAdmin = false;
@@ -51,34 +42,6 @@ export class NavComponent implements OnInit {
         });
       }
     });
-  }
-
-  login() {
-    this.loadingLogin = true;
-    this.isLoginErrorVisible = false;
-    const email = this.loginForm.get('email').value;
-    const password = this.loginForm.get('password').value;
-    const stayLoggedIn = this.loginForm.get('stayLoggedIn').value;
-    console.log('Login!');
-    this.authenticationService.login({
-      email,
-      password,
-      rememberMe: stayLoggedIn
-    }).subscribe(() => {
-      console.log('Navigation to dashboard');
-      this.loadingLogin = false;
-      this.isLoginErrorVisible = false;
-      this.router.navigate(['/dashboard']);
-    }, error => {
-      console.error(error);
-      this.loadingLogin = false;
-      this.errorLogin = error.error.message;
-      if (!this.errorLogin) {
-        this.errorLogin = 'Verbindungsfehler';
-      }
-      this.isLoginErrorVisible = true;
-    });
-
   }
 
   logout() {
