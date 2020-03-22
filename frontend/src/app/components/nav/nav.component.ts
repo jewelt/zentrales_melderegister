@@ -36,6 +36,7 @@ export class NavComponent implements OnInit {
   ngOnInit() {
     this.authenticated$.subscribe(isAuthenticated => {
       if (isAuthenticated) {
+        console.log('User logged in. @nav');
         this.userAccountApiControllerService.getCurrentUserUsingGET().subscribe((user) => {
           this.isUser = user.authorities.includes('USER');
           this.isAdmin = user.authorities.includes('ADMIN');

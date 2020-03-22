@@ -4,9 +4,12 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {
   CityControllerService,
-  LoginRequest, PatientControllerService, StatisticsControllerService,
+  LoginRequest,
+  PatientControllerService,
+  StatisticsControllerService,
   TestControllerService,
-  TestResultControllerService, UserAccountApiControllerService,
+  TestResultControllerService,
+  UserAccountApiControllerService,
   UserJwtApiControllerService
 } from '../clients/melderegister';
 
@@ -23,7 +26,22 @@ export class AuthService {
               private userAccountApiControllerService: UserAccountApiControllerService,
               private statisticsControllerService: StatisticsControllerService,
               private testResultControllerService: TestResultControllerService) {
-    this.setApiKeys({});
+
+    const token = localStorage.getItem('token');
+    if (token) {
+      const tokenData = this.getAuthDetailsFromToken(token);
+      if (new Date().getTime() < tokenData.exp * 1000) {
+        console.log('Key still valid');
+        this.setApiKeys({
+          'X-Melderegister-Authorization': 'Bearer ' + token
+        });
+        this.authenticated$.next(true);
+      }
+    } else {
+      console.log('Token expired. Deleting');
+      localStorage.removeItem('token');
+      this.setApiKeys({});
+    }
   }
 
   authenticated$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
@@ -31,14 +49,22 @@ export class AuthService {
   login(loginRequest: LoginRequest): Observable<void> {
     this.userJwtApiControllerService.configuration.apiKeys = {};
     return this.userJwtApiControllerService.authorizeUsingPOST(loginRequest).pipe(map(response => {
+      const token = (response as any).id_token;
+      localStorage.setItem('token', token);
       this.setApiKeys({
-        'X-Melderegister-Authorization': 'Bearer ' + (response as any).id_token
+        'X-Melderegister-Authorization': 'Bearer ' + token
       });
       this.authenticated$.next(true);
     }));
   }
 
+  private getAuthDetailsFromToken(jwt: string): AuthDetails {
+    const jwtData = jwt.split('.')[1];
+    return JSON.parse(window.atob(jwtData));
+  }
+
   logout() {
+    localStorage.removeItem('token');
     this.setApiKeys({});
     this.authenticated$.next(false);
   }
@@ -52,4 +78,10 @@ export class AuthService {
     this.userAccountApiControllerService.configuration.apiKeys = keys;
   }
 
+}
+
+export interface AuthDetails {
+  sub: string;
+  auth: string;
+  exp: number;
 }

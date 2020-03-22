@@ -17,6 +17,7 @@ export class UserGuard implements CanActivate {
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+    console.log('Checking @UserGuard');
     return this.userAccountApiControllerService.getCurrentUserUsingGET().pipe(map((user) => {
       return user.authorities.includes('USER');
     }), catchError(error => {

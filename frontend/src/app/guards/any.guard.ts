@@ -17,6 +17,7 @@ export class AnyGuard implements CanActivate {
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+    console.log('Checking @AnyGuard');
     return this.userAccountApiControllerService.getCurrentUserUsingGET().pipe(map((user) => {
       return user.authorities.includes('USER') || user.authorities.includes('ADMIN');
     }), catchError(error => {
