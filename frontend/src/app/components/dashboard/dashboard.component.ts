@@ -119,18 +119,27 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.statisticsControllerService.getCountByAgeUsingGET().subscribe(data => {
       const groups = [{
         from: 0,
-        to: 4
+        to: 9
       }, {
-        from: 5,
-        to: 14
+        from: 10,
+        to: 19
       }, {
-        from: 15,
-        to: 34
+        from: 20,
+        to: 29
       }, {
-        from: 35,
+        from: 30,
+        to: 39
+      }, {
+        from: 40,
+        to: 49
+      }, {
+        from: 50,
         to: 59
       }, {
         from: 60,
+        to: 69
+      }, {
+        from: 70,
         to: 79
       }, {
         from: 80,
