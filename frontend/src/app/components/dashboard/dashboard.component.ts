@@ -22,22 +22,22 @@ export class DashboardComponent implements OnInit, OnDestroy {
     map(({matches}) => {
       if (matches) {
         return [
+          {title: 'Infektionsanzahl', cols: 2, rows: 3, type: DiagramType.ANZAHL_INFEKTIONEN},
+          {title: 'Entwicklung der Gesamtinfektionen', cols: 2, rows: 3, type: DiagramType.ANZAHL_TAG},
+          {title: 'Entwicklung der Neuinfektionen', cols: 2, rows: 3, type: DiagramType.ZUWACHS_TAG},
           {title: 'Gesamtinfektionen nach Bundesland', cols: 2, rows: 3, type: DiagramType.ANZAHL_BUNDESLAND},
           {title: 'Gesamtinfektionen nach Alter', cols: 2, rows: 3, type: DiagramType.ANZAHL_ALTER},
-          {title: 'Infektionsanzahl', cols: 2, rows: 3, type: DiagramType.ANZAHL_INFEKTIONEN},
           {title: 'Heutige Infektionen nach Bundesland', cols: 2, rows: 3, type: DiagramType.ZUWACHS_BUNDESLAND},
-          {title: 'Entwicklung der Gesamtinfektionen', cols: 2, rows: 3, type: DiagramType.ANZAHL_TAG},
-          {title: 'Entwicklung der Neuinfektionen', cols: 2, rows: 3, type: DiagramType.ZUWACHS_TAG}
         ];
       }
 
       return [
+        {title: 'Infektionsanzahl', cols: 2, rows: 1, type: DiagramType.ANZAHL_INFEKTIONEN},
+        {title: 'Entwicklung der Gesamtinfektionen', cols: 1, rows: 1, type: DiagramType.ANZAHL_TAG},
+        {title: 'Entwicklung der Neuinfektionen', cols: 1, rows: 1, type: DiagramType.ZUWACHS_TAG},
         {title: 'Gesamtinfektionen nach Bundesland', cols: 1, rows: 1, type: DiagramType.ANZAHL_BUNDESLAND},
         {title: 'Gesamtinfektionen nach Alter', cols: 1, rows: 1, type: DiagramType.ANZAHL_ALTER},
-        {title: 'Infektionsanzahl', cols: 2, rows: 1, type: DiagramType.ANZAHL_INFEKTIONEN},
-        {title: 'Heutige Infektionen nach Bundesland', cols: 1, rows: 1, type: DiagramType.ZUWACHS_BUNDESLAND},
-        {title: 'Entwicklung der Gesamtinfektionen', cols: 1, rows: 1, type: DiagramType.ANZAHL_TAG},
-        {title: 'Entwicklung der Neuinfektionen', cols: 1, rows: 1, type: DiagramType.ZUWACHS_TAG}
+        {title: 'Heutige Infektionen nach Bundesland', cols: 1, rows: 1, type: DiagramType.ZUWACHS_BUNDESLAND}
       ];
     })
   );
@@ -96,6 +96,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
         countryControl.disable();
       }
     });
+
+    this.stateControllerService.getAllStatesUsingGET().subscribe(states => {
+      this.states = states;
+    });
     this.loadData();
     this.timer = setInterval(() => {
       this.loadData();
@@ -144,60 +148,82 @@ export class DashboardComponent implements OnInit, OnDestroy {
       });
     });
 
-    this.statisticsControllerService.getCountByDayUsingGET().subscribe(data => {
-      this.infectedByDay = data.map(countByDay => ({
-        value: countByDay.value,
-        name: countByDay.date
-      }));
+    this.loadFilteredData();
 
-      this.statisticsControllerService.getGrowthByDayUsingGET().subscribe(dataGrowth => {
-        this.growthByDay = dataGrowth.map(countByDay => ({
-          value: countByDay.value,
-          name: countByDay.date
-        })).sort((a, b) => {
-          if (a.name > b.name) {
-            return 1;
-          } else if (a.name < b.name) {
-            return -1;
-          } else {
-            return 0;
-          }
-        });
-
-        this.infectedAndGrowthByDay = [
-          {
-            name: 'Gesamtinfektionen',
-            series: this.infectedByDay
-          }, {
-            name: 'Neuinfektionen',
-            series: this.growthByDay
-          }
-        ];
-        console.log(this.infectedAndGrowthByDay);
-      });
-
-    });
+    // this.statisticsControllerService.getCountByDayUsingGET().subscribe(data => {
+    //   this.infectedByDay = data.map(countByDay => ({
+    //     value: countByDay.value,
+    //     name: countByDay.date
+    //   }));
+    //
+    //   this.statisticsControllerService.getGrowthByDayUsingGET().subscribe(dataGrowth => {
+    //     this.growthByDay = dataGrowth.map(countByDay => ({
+    //       value: countByDay.value,
+    //       name: countByDay.date
+    //     })).sort((a, b) => {
+    //       if (a.name > b.name) {
+    //         return 1;
+    //       } else if (a.name < b.name) {
+    //         return -1;
+    //       } else {
+    //         return 0;
+    //       }
+    //     });
+    //
+    //     this.infectedAndGrowthByDay = [
+    //       {
+    //         name: 'Gesamtinfektionen',
+    //         series: this.infectedByDay
+    //       }, {
+    //         name: 'Neuinfektionen',
+    //         series: this.growthByDay
+    //       }
+    //     ];
+    //   });
+    //
+    // });
 
     this.statisticsControllerService.getGrowthByStateTodayUsingGET().subscribe(data => {
       this.growthByStateToday = data;
     });
 
-    this.states = [{
-      id: 1,
-      name: 'Niedersachsen',
-    }, {
-      id: 2,
-      name: 'Bremen',
-    }];
+  }
 
-    // this.stateControllerService.getStateDTOUsingGET().subscribe(states => {
-    //   this.states = states;
-    // });
-
+  loadFilteredData() {
+    const country = this.searchGroup.get('country').value as CountryDTO;
+    const state = this.searchGroup.get('state').value as StateDTO;
+    const from = this.searchGroup.get('dateFrom').value as moment.Moment;
+    const to = this.searchGroup.get('dateTill').value as moment.Moment;
+    const countryId = country ? country.id : null;
+    const stateId = state ? state.id : null;
+    this.statisticsControllerService.getDataByDateAndLocationUsingGET(countryId, to.toISOString(true), from.toISOString(true), stateId).subscribe(data => {
+      this.infectedByDay = data.map(datum => {
+        return {
+          name: datum.date.substring(0, 10),
+          value: datum.total
+        };
+      });
+      this.growthByDay = data.map(datum => {
+        return {
+          name: datum.date.substring(0, 10),
+          value: datum.growth
+        };
+      });
+      this.infectedAndGrowthByDay = [
+        {
+          name: 'Gesamtinfektionen',
+          series: this.infectedByDay
+        }, {
+          name: 'Neuinfektionen',
+          series: this.growthByDay
+        }
+      ];
+      console.log(this.infectedAndGrowthByDay);
+    });
   }
 
   search() {
-
+    this.loadFilteredData();
   }
 }
 
